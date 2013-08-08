@@ -138,5 +138,3 @@ You can also run the unit tests at http://www.csvscript.com/dev/qtest.html,
 but the best way to see the test source is to look at the qtestcsv.js file
 
 Documentation in some form will be forthcoming as I get time.
-
-
