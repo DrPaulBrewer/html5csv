@@ -18,6 +18,18 @@ Example 1:
 
 <a href="http://jsfiddle.net/DrPaulBrewer/zHN7g/">JSFiddle for Example 1: Hello World in html5csv</a>
 
+In every introductory language class there is usually a "Hello World" program
+that teaches the basics of how to get the language to do something by having
+it print "Hello World".
+
+Usually, one stops there.  
+
+Here, we want to work with tabular or matrix data, so we need to go 
+a little further.  We will create data with Hello and World as the headings
+and various characters and their planets as the data. We'll print out the
+data in a table on the web page.  And then, we'll save the data somewhere
+on the browser's storage, a feature called "local storage" in HTML 5.
+
 CSV.
   begin([
    ["Hello","World"],
@@ -49,12 +61,22 @@ Please do Example 1 before trying this one, or it won't work.
 
 CSV.begin("local/helloWorld").download("HelloWorld.csv").go();
 
-Downloads directly from the browser.  No server is involved. 
+Here, we access the data created in example 1.  It was stored away in the 
+browser, and it will stay there until explicitly deleted.  We are going to
+take that data, and generate a CSV file called "HelloWorld.csv" and output
+it to the user.  
+
+The user will not have to click on a link, it is pushed at him. This is
+an example to show you HTML 5 Data URL Download in action.   You should
+bind this code to a link click function in jQuery if you want a less
+pushy user experience.
+
+The data downloads directly from the browser.  No server is involved. 
 
 You should be able to send the CSV file to OpenOffice Spreadsheet or Excel
 without a problem.
 
-May not work on all browsers, but recent Chrome and Firefox seem ok.
+Example #2 may not work on all browsers, but recent Chrome and Firefox seem ok.
 
 Finally, to clear the data from your browser, you will need to do a general 
 "delete cookies and other site and plugin data" from chrome's control panel.
