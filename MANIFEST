@@ -1,0 +1,18 @@
+html5csv.js
+  main Javascript library for the html5csv project
+   note: we require jQuery, and you may also want to load the 
+      string compression, jqplot, and numeric.js from external-free
+      depending on what you are doing
+
+LICENSE - The GNU General Public License version 3.  This only applies
+to code I have written -- the code in html5csv.js and qtestcsv.js
+
+qtestcsv.css CSS code to make a div into a scrollable window, 
+for one of the unit tests
+
+qtestcsv.js unit tests of html5csv.js for use with the qunit framework
+
+qtest.html Testing main html to load up qunit and qtestcsv.js
+
+./external-free
+  libraries of free code by others, that are useful with html5csv.js
