@@ -30,8 +30,8 @@ Here, we want to work with tabular or matrix data, so we need to go a little fur
 Example 1 will:
 
 1. create some data
-     * Hello and World as the headings
-     * Various characters and their planets as the data. 
+     * Hello and World as the column headings
+     * Various names and their planets as the values. 
 1. show how to get this data into CSV.begin()
 2. Create and display an HTML table from the data.
 3. Save the data in browser local storage, so it will still be there tomorrow, or at least for Example 2.
