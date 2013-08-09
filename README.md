@@ -71,12 +71,12 @@ CSV.
   go();
 ```
   
-
+#### How Example 1 works
 1. CSV. accesses the CSV object created by html5csv.js  CSV. is the only global object
 created by html5csv, on `window`. 
 1. begin selects data to fetch into the CSV engine.  The chain of methods starting with begin and ending with go or finalize is queued internally as a CSV workflow.   
-1. table will generates a table in the div named "output", or creates such a div;
-1. save will save the table HTML 5 browser localStorage, key local/helloWorld, 
+1. table will generates a table in the div named "output". If the div does not exist, it is appended to document.body
+1. save will save the table data (and some meta data) in HTML 5 browser localStorage with key "local/helloWorld", 
 using LZString compression if available; 
 1. go() starts the chain of methods, or CSV workflow, executing.  Execution of each step is asynchronous
 and involves a brief delay in setTimeout before going to the next step.  
