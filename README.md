@@ -11,8 +11,8 @@ Dependencies:  jQuery
 
 Optional:  LZString (for compression), numeric.js (for analysis), qunit (for unit testing)
 
-The optional libraries are all distributed under the MIT-License, and are included in the external-free subdirectory.
-
+The optional libraries are authored by others and distributed under the MIT-License.  Verbatim copies recent as of
+August 2013 are included in the external-free subdirectory.  
 
 ##Example 1: "Hello World"  
 
