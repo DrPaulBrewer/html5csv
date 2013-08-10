@@ -157,7 +157,7 @@ Input capabilities include:
 
 Works the same way, but there is no HTML input element.  
 
-The name in CSV.begin(name) can be a valid jQuery selector like \#divId, and if there are 
+The name in CSV.begin(name) can be a [valid jQuery selector](http://api.jquery.com/category/selectors/) like \#divId, and if there are 
 table rows as descendents it will gather the data.
 
 ####Examples with Basic Math
