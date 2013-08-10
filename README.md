@@ -235,14 +235,16 @@ learning, as well as ajax interactions with a server, when necessary.
 
 ------
 
-### Additional examples can be found in the unit tests
+### Next steps
 
 Possibly, you want to do something a little more serious now,
 like generate or upload numerical data, run a regression, or plot data. 
 
-For more examples, read through the unit tests in qtestcsv.js
+More documentation, still a bit rough, can be found in the [wiki][https://github.com/DrPaulBrewer/html5csv/wiki].
 
-You can also run the unit tests at http://www.csvscript.com/dev/qtest.html,
-but the best way to see the test source is to look at the qtestcsv.js file
+If unsure about the wiki, look in the  [html5csv source code][ https://github.com/DrPaulBrewer/html5csv/blob/master/html5csv.js]
 
-Additional documentation will be forthcoming as I get time.
+For more examples, read through the unit tests in [qtestcsv.js][https://github.com/DrPaulBrewer/html5csv/blob/master/qtestcsv.js]
+
+You can also [run the unit tests in my Qunit page][http://www.csvscript.com/dev/qtest.html]
+
