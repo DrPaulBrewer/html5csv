@@ -240,11 +240,11 @@ learning, as well as ajax interactions with a server, when necessary.
 Possibly, you want to do something a little more serious now,
 like generate or upload numerical data, run a regression, or plot data. 
 
-More documentation, still a bit rough, can be found in the [wiki][https://github.com/DrPaulBrewer/html5csv/wiki].
+More documentation, still a bit rough, can be found in the [wiki](https://github.com/DrPaulBrewer/html5csv/wiki).
 
-If unsure about the wiki, look in the  [html5csv source code][ https://github.com/DrPaulBrewer/html5csv/blob/master/html5csv.js]
+If unsure about the wiki, look in the  [html5csv source code](https://github.com/DrPaulBrewer/html5csv/blob/master/html5csv.js)
 
-For more examples, read through the unit tests in [qtestcsv.js][https://github.com/DrPaulBrewer/html5csv/blob/master/qtestcsv.js]
+For more examples, read through the unit tests in [qtestcsv.js](https://github.com/DrPaulBrewer/html5csv/blob/master/qtestcsv.js)
 
-You can also [run the unit tests in my Qunit page][http://www.csvscript.com/dev/qtest.html]
+You can also [run the unit tests in my Qunit page](http://www.csvscript.com/dev/qtest.html)
 
