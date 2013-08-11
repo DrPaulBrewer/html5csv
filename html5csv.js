@@ -238,6 +238,9 @@ window.CSV = (function(){
 		var item;
 		$(this).find('th,td').each(function(i) {
 		    item = $(this).text();
+                    // fix for issue #1 
+                    item = $(item).trim();  // use jQuery's trim to kill newlines, whitesp
+                    // end fix
 		    if (isNaN(item)){
 			if (item==='null') item=null;
 			if (item==='undefined') item=undefined;
