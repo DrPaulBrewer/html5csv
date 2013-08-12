@@ -251,7 +251,7 @@ asyncTest("HTML table data retrieve -- check that new lines and white space are 
     $(document.body).append(newHTML);
     setTimeout(function(){
 	ok($('#tab1').html().split("\n").length>10, "jQuery retrieved html contains newlines");
-    });
+    }, 200);
     setTimeout(function(){
 	CSV.begin('#tab1').go(function(e,D){
 	    ok(!e, "error: "+e);
