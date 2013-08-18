@@ -17,7 +17,7 @@
     CSV.begin('local/dldata').
       table('oldData', {header:1, caption:'old data'}).
       go();
-    // force a pop up of the file input widget in #foo
+    // on use of the file widget in #foo
     // show the new data in an editor, save it in the localStorage
     CSV.begin('#foo').
         editor('newData', true).
