@@ -10,14 +10,17 @@
   <div id='output'>
   </div>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-  <script src="./lz-string-1.3.0.js"></script>
-  <script src="./csv.js"></script>
+  <script src="./external-free/lz-string-1.3.0.js"></script>
+  <script src="./html5csv.js"></script>
   <script>
+    // show the old data, if any, from localStorage and show it in a table
     CSV.begin('local/dldata').
-      table('output', {header:1, caption:'old data'}).
+      table('oldData', {header:1, caption:'old data'}).
       go();
+    // force a pop up of the file input widget in #foo
+    // show the new data in an editor, save it in the localStorage
     CSV.begin('#foo').
-        table('output', {header:1, caption:'new data'}).
+        editor('newData', true).
         save('local/dldata').
       go();
   </script>
