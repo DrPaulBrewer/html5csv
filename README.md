@@ -246,5 +246,5 @@ If unsure about the wiki, look in the  [html5csv source code](https://github.com
 
 For more examples, read through the unit tests in [qtestcsv.js](https://github.com/DrPaulBrewer/html5csv/blob/master/qtestcsv.js)
 
-You can also [run the unit tests in my Qunit page](http://www.csvscript.com/dev/qtest.html)
+You can also [run the unit tests in the Qunit page](http://drpaulbrewer.github.io/html5csv/qtest.html)
 
