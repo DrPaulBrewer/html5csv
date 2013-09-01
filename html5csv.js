@@ -166,35 +166,92 @@ window.CSV = (function(){
 	    }
 	    return M;
 	},
-	parseCSV: function(t){
-	    // this should probably be replaced by something more robust
-	    // the concern is that csv files from various sources could
-	    //   be a mess, fields quoted differently even in same row, 
-	    //    escaped special characters (or not) etc...
-	    // tried csvParse in numeric.js - it seemed not to handle quoted well
-	    var lines = t.split("\n");
-	    var j=0,k=0,rows = [], line="";
-	    var row, i, l, c0, quote, offset, sep, item;
-	    for(j=0,k=lines.length;j<k;++j){
-		line = lines[j];
-		c0 = line.charAt(0);
-		quote = (c0==="'" || c0==='"')? c0: '';
-		offset = (quote==='')? 0: 1;
-		sep = quote+','+quote;
-		row = line.substr(offset,line.length-2*offset).split(sep);
-		for(i=0,l=row.length;i<l;++i){
-		    item = row[i];
-		    if (isNaN(item)){
-			if (item==='null') item=null;
-			if (item==='undefined') item=undefined;
-		    } else if (item === ''){
-			item = ''; // could use undefined instead
-		    } else item = 1 * item;
-		    row[i] = item;
+	numberize: function(rows){
+	    var i,j,k,l,v,f;
+	    for(i=0,l=rows.length;i<l;++i){
+		for(j=0,k=rows[i].length;j<k;++j){
+		    v = rows[i][j];
+		    // see isnumeric discussion in http://stackoverflow.com/a/1830844/103081 
+		    if (typeof v === 'string'){
+			f = parseFloat(v);
+			if (!isNaN(f) && isFinite(v)) rows[i][j] = f;
+		    }
 		}
-		rows.push(row);
 	    }
 	    return rows;
+	},
+	easyParseCSV: function(t, comma, newline){ 
+	    // handles unquoted CSV parsing
+	    var lines=t.split(newline), all = [];
+	    var i,l;
+	    for(i=0, l=lines.length; i<l; ++i)
+		all[i]=lines[i].split(comma);
+	    return all;
+	},
+	hardParseCSV: function(t, quote, comma, newline, pretrim){
+	    var i, c, field, row, all, q;
+	    // goal: parse according to RFC4180
+	    all = [];
+	    row = [];
+	    field = '';
+	    q = false;
+	    i = 0;
+	    while (i < t.length ){ 
+		c = t.charAt(i);
+		if (c === quote){ 
+		    if (field.length === 0){ 
+			q = true;
+		    } else if ( (t.length>(i+1)) 
+				&& (t.charAt(i+1) === quote)
+			      ){ 
+			++i;
+			field += quote;
+		    } else if (q){ 
+			q = false;
+		    } else {
+			// if there is a quote here, it is not RFC4180
+			// field += quote;  we could include it anyway... or not
+		    }
+		} else if (c === comma){ 
+		    if (q){ 
+			field += comma;
+		    } else {
+			row.push(field);
+			field = '';
+		    }
+		} else if (c === newline){ 
+		    if (q){
+			field += newline;
+		    } else {
+			if (field.length > 0){
+			    row.push(field);
+			    field = '';
+			}
+			all.push(row);
+			row = [];
+		    }
+		} else if ((c === pretrim) && (field.length === 0)){
+		} else {
+		    field += c;
+		}
+		++i;
+	    }
+	    if (field.length>0) row.push(field);
+	    if (row.length>0) all.push(row);
+	    return all;
+	},
+	parseCSV: function(t){
+	    var shared = this;
+	    // if there are no quotes, this will just split on newline and comma
+	    // if there are quotes, then it has to be done one char at a time
+	    var newline="\n", quote='"', comma = ",", space=" ";
+	    var all; 
+	    if (t.indexOf(quote) === -1){
+		all = shared.easyParseCSV(t, comma, newline);
+	    } else {
+		all = shared.hardParseCSV(t, quote, comma, newline, space);
+	    }
+	    return shared.numberize(all);
 	},
 	fromFile: function(id){
 	    var shared = this;
