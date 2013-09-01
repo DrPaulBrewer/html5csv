@@ -200,7 +200,7 @@ window.CSV = (function(){
 		c = t.charAt(i);
 		if (c === quote){ 
 		    if (field.length === 0){ 
-			q = true;
+			q = !q;
 		    } else if ( (t.length>(i+1)) 
 				&& (t.charAt(i+1) === quote)
 			      ){ 
