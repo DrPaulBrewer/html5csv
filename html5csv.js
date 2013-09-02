@@ -43,6 +43,7 @@ window.CSV = (function(){
 	'ols': ols,
 	'save': save,
 	'download': download,
+	'pca': pca
     };
 
     var csvShared = { 
@@ -308,6 +309,42 @@ window.CSV = (function(){
 		});
 		return [row]; // inside another array to defeat flattening
 	    }).get();
+	},
+	col: function(X,j){ 
+	    var i,l,d=[];
+	    for(i=0,l=X.length;i<l;++i) d.push(X[i][j]);
+	    return d;
+	},
+	colAvg: function(X){ 
+	    var i,l,j,k,s=[];
+	    for(i=0,l=X[0].length; i<l; ++i) s[i]=0;
+	    for(i=0,l=X.length;i<l;++i)
+		for(j=0,k=s.length;j<k;++j)
+		    s[j]+=X[i][j]/l;
+	    return s;
+	},
+	colAvg2: function(X){
+	    var i,l,j,k,v,s=[];
+	    for(i=0,l=X[0].length; i<l; ++i) s[i]=0;
+	    for(i=0,l=X.length;i<l;++i)
+		for(j=0,k=s.length;j<k;++j){
+		    v = X[i][j];
+		    s[j]+=(v*v)/l;
+		}
+	    return s;
+	},
+	colVar: function(X, ssc, zeromean){
+	    // ssc is boolean option for small sample correction
+	    // zeromean is boolean option to ignore sample mean as if 0.0
+	    var meanOfSquare = this.colAvg2(X);
+	    var mean = this.colAvg(X);
+	    var scale = (ssc)?(X.length/(X.length-1)): 1;
+	    var i,l,squareOfMean=[], result=[];
+	    for(i=0,l=X[0].length; i<l; ++i){
+		squareOfMean[i] = (zeromean)? 0: (mean[i]*mean[i]);
+		result[i] = scale * (meanOfSquare[i] - squareOfMean[i]);
+	    }
+	    return result
 	},
 	nextTask: function (jqXHR, textStatus){
 	    var shared = this;
@@ -773,6 +810,8 @@ window.CSV = (function(){
 	var rows = shared.data.rows;
 	var i,l,plots={},plotData=[];
 	var plotName,plotPairs,plotOptions;
+	if (typeof $.jqplot !== 'function')
+	    throw "jqplot is not loaded.  You need to include the css and script tags for the jqplot library and any options";
 	for(i=0,l=plotspec.length;i<l;++i){
 	    plotName    = plotspec[i][0];
 	    plotPairs   = plotspec[i][1];
@@ -891,6 +930,39 @@ window.CSV = (function(){
 		}
 	    })(fitspecs[i]);
 	}
+	return shared.nextTask();
+    }
+
+    function pca(indep, options){
+	var shared = this;
+	var X=shared.submatrix(null, indep);
+	var C=shared.colAvg(X);
+	var V=shared.colVar(X, (options && options.ssc), (!options || !options.center) );
+	var i,j,k,l,adjX=[];
+	shared.data.pca = {
+	    'indep': indep,
+	    'options': options,
+	    'mean':  C,
+	    'variance': V
+	}; 
+	if (!window.numeric) throw "CSV: pca requires loading numeric.js";
+	for(i=0,l=X.length; i<l; ++i){
+	    adjX[i] = [];
+	    for(j=0,k=X[i].length; j<k; ++j){
+		adjX[i][j] = X[i][j];
+		if (options && options.center) adjX[i][j] += -1*C[j];
+		if (options && options.scale)  adjX[i][j] *=  1/Math.sqrt(V[j]);
+	    }	    
+	}
+	shared.data.pca.adjX = adjX; 
+	shared.data.pca.svd = numeric.svd(adjX);
+	if (options && options.newcols){ 
+	    Array.prototype.push.apply(shared.data.rows[0], options.newcols); 
+	    for(i=1,l=shared.data.rows.length;i<l;++i)
+		for(j=0,k=options.newcols.length; j<k; ++j)
+		    shared.data.rows[i].push(shared.data.pca.svd.U[(i-1)][j]*shared.data.pca.svd.S[j]);
+	}
+	if (options && options.trash) delete shared.data.pca;
 	return shared.nextTask();
     }
     
