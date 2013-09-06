@@ -568,13 +568,6 @@ window.CSV = (function(){
 		    actualArgs.push(shared.init.options[dict[i]]);
 		}
 		shared.data.rows = func.apply(shared, actualArgs);
-		if (shared.init.options.header){
-		    if (shared.init.options.header.length === shared.data.rows[0].length){
-			shared.data.rows.unshift(shared.init.options.header);
-		    } else {
-			throw "CSV: fetch: special: header length mismatches data";
-		    }
-		}
 	    })();
 	} else if (shared.init.csvName){
 	    return shared.ajaxMapper.apply(shared,['fetch',shared.init.csvName]);
@@ -597,6 +590,13 @@ window.CSV = (function(){
 	    shared.data.rows = shared.fill(shared.init.options.dim,
 					   shared.init.fill);
 	} else throw "CSV: fetch unknown csv data source";
+	if ((shared.init) && (shared.init.options) && (shared.init.options.header)){
+	    if (shared.init.options.header.length === shared.data.rows[0].length){
+		shared.data.rows.unshift(shared.init.options.header);
+	    } else {
+		throw "CSV: fetch: option header: length mismatches data";
+	    }
+	}
 	if (doNextTask) shared.nextTask();
     }
 		   
