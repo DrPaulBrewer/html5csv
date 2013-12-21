@@ -392,7 +392,7 @@ window.CSV = (function(){
 
     function extend(newCsvFuncs, newCsvShared){
 	if (typeof newCsvFuncs === "object"){ 
-	    $.extend(csvFuncs, newFuncs);
+	    $.extend(csvFuncs, newCsvFuncs);
 	} else { 
 	    throw "CSV: extend newCsvFuncs must be either an object with function values to extend csvFuncs or null for no extensions";
 	}
