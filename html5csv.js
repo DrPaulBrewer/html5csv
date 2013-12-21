@@ -868,7 +868,7 @@ window.CSV = (function(){
 		    colData[i-1] = colOrFunc(i, rowobj);
 		}
 	    } else {
-		for(i=1,l=rows.length; i<l; ++i) colData[i-1]=func(i,rows[i]);	    
+		for(i=1,l=rows.length; i<l; ++i) colData[i-1]=colOrFunc(i,rows[i]);	    
 	    }
 	} else throw "CSV: appendCol second parameter must be data column or function";
 	if (h) colData.unshift(colName);
