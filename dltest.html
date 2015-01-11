@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Download csv file test for html5csv.js</title>
+</head>
+<body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  <script src="./html5csv.js"></script>
+  <script>
+CSV.
+  begin([
+   ["Hello","World"],
+   ["Paul","Earth"],
+   ["Marvin","Mars"],
+   ["Spock","Vulcan"]
+         ]).
+  table("output",{header:1,caption:"table and download example"}).
+  download("helloWorld.csv").
+  go();
+  </script>
+</body>
+</html>

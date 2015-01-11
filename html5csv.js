@@ -966,22 +966,48 @@ window.CSV = (function(){
 	return shared.nextTask();
     }
     
-    function download(dlname){
-	// download via dataURL and self-clicking link
+    function download(dlname, strict){
+	// download via blob(IE) or dataURL and self-clicking link (others)
+	// if strict is truthy, any error is thrown and sent to final callback
+	// otherwise, errors are ignored
 	// I would like to thank adeneo, http://stackoverflow.com/users/965051/adeneo
 	// for inspiration and showing me how to use a data URL this way
 	// in http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
+	// Adaneo's solution works on Firefox and Chrome
+	// Later Manu Sharma proposed an IE solution
+	// in http://stackoverflow.com/a/27699027/103081
 	var shared = this;
 	var rows=shared.data.rows;
 	var i,l, csvString='';
+	var fname = dlname || (csvname+'.csv');
 	for(i=0,l=rows.length; i<l; ++i) csvString += '"'+rows[i].join('","')+'"'+"\n";
-	var a = document.createElement('a');
-	a.href = 'data:attachment/csv,'+encodeURIComponent(csvString);
-	a.target = '_blank';
-	a.id = 'dataURLdownloader';
-	a.download = dlname || (csvname+'.csv');
-	document.body.appendChild(a);
-	a.click();
+	// try IE solution first
+	if (window.navigator.msSaveOrOpenBlob) {
+	    try {
+		var blob = new Blob(
+		    [decodeURIComponent(encodeURI(csvString))], {
+			type: "text/csv;charset=utf-8;"
+		    });
+		navigator.msSaveBlob(blob, fname);
+	    } catch(e){ 
+		if (strict) throw "error on download(), IE blob branch: "+e; 
+	    }
+	} else {
+	    // try Firefox/Chrome solution here
+	    try {
+		var a = document.createElement('a');
+		if (!('download' in a)) throw "a does not support download";
+		a.href = 'data:attachment/csv,'+encodeURIComponent(csvString);
+		a.target = '_blank';
+		// use class instead of id here -- PJB 2015.01.10
+		a.class = 'dataURLdownloader';
+		a.download = fname;
+		document.body.appendChild(a);
+		a.click();
+	    } catch(e){
+		if (strict) throw "error on download(), data url branch: "+e;
+	    }
+	}
 	shared.nextTask();
     }
 
