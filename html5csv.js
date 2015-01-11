@@ -978,11 +978,11 @@ window.CSV = (function(){
 	// in http://stackoverflow.com/a/27699027/103081
 	var shared = this;
 	var rows=shared.data.rows;
-	var i,l, csvString='';
+	var i,l, csvString='', errormsg='';
 	var fname = dlname || (csvname+'.csv');
 	for(i=0,l=rows.length; i<l; ++i) csvString += '"'+rows[i].join('","')+'"'+"\n";
 	// try IE solution first
-	if (window.navigator.msSaveOrOpenBlob) {
+	if (window.navigator && window.navigator.msSaveOrOpenBlob) {
 	    try {
 		var blob = new Blob(
 		    [decodeURIComponent(encodeURI(csvString))], {
@@ -990,7 +990,9 @@ window.CSV = (function(){
 		    });
 		navigator.msSaveBlob(blob, fname);
 	    } catch(e){ 
-		if (strict) throw "error on download(), IE blob branch: "+e; 
+		errormsg = "error on CSV.download, IE blob branch:"+e;
+		console.log(errormsg);
+		if (strict) throw errormsg; 
 	    }
 	} else {
 	    // try Firefox/Chrome solution here
@@ -1005,7 +1007,9 @@ window.CSV = (function(){
 		document.body.appendChild(a);
 		a.click();
 	    } catch(e){
-		if (strict) throw "error on download(), data url branch: "+e;
+		errormsg = "error on CSV.download, data url branch:"+e;
+		console.log(errormsg);
+		if (strict) throw errormsg; 
 	    }
 	}
 	shared.nextTask();
