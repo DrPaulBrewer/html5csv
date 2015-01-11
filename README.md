@@ -90,7 +90,11 @@ and involves a brief delay in setTimeout before going to the next step.
 Prerequisite:  Example 1 loads data that will be used by Example 2.  Do Example 1 first.
 
 Example #2 may not work on all browsers, but recent Chrome and Firefox seem ok.
-Code for IE11 was added Jan 2015.
+
+Code for IE11 was also added Jan 2015.  
+
+Credit: The serverless download code was inspired 
+by Stack Overflow answers [from adeneo for FF/Chrome](http://stackoverflow.com/a/17836529/103081) and [Manu Sharma for IE11](http://stackoverflow.com/a/27699027/103081) to [Export javascript data to csv file without server interaction](http://stackoverflow.com/q/17836273/103081)
 
 In HTML, load jQuery, LZstring if you used it in example 1, and html5csv.js, and then generating a download
 is a Javascript one-liner (and can also be tried from the console):
