@@ -89,7 +89,8 @@ and involves a brief delay in setTimeout before going to the next step.
 
 Prerequisite:  Example 1 loads data that will be used by Example 2.  Do Example 1 first.
 
-Also, Example #2 may not work on all browsers, but recent Chrome and Firefox seem ok.
+Example #2 may not work on all browsers, but recent Chrome and Firefox seem ok.
+Code for IE11 was added Jan 2015.
 
 In HTML, load jQuery, LZstring if you used it in example 1, and html5csv.js, and then generating a download
 is a Javascript one-liner (and can also be tried from the console):
