@@ -281,6 +281,30 @@ asyncTest("appendCol -- even/odd", 2, postCreate(function(csvname,csvdata){
 	    
 }));
 
+asyncTest("appendCol -- sum function, !rowprops", 3, postCreate(function(csvname,csvdata){
+    CSV.begin(csvname).
+	appendCol("sum", function(index,row){
+	    for(var i=0,l=row.length,s=0;i<l;++i)
+		s+=row[i];
+	    return s;
+	}, false).
+	go(function(e,D){
+	    var i,j,l,ll,s=0;
+	    console.log(e);
+	    console.log(D);
+	    console.log(csvdata);
+	    ok(!e, "errors: "+e);
+	    ok(D.rows[0][csvdata[0].length]==='sum', "sets new colname 'sum'");
+	    for(i=1,l=D.rows.length;i<l;++i){
+		for(j=0,ll=D.rows[i].length-1;j<ll;++j)
+		    s+=D.rows[i][j];
+		s-=D.rows[i][ll]
+	    }
+	    ok(s===0, "bad test sum, should be zero, got: "+s);
+	    start();
+	});
+}));
+
 asyncTest("appendCol -- detect length mismatch", 2, postCreate(function(csvname,csvdata){
     CSV.begin(csvname).
 	appendCol("parity", [1,0], "strict").
