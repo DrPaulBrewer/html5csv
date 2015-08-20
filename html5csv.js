@@ -25,12 +25,16 @@
 //
 "use strict";
 
-if (typeof window.jQuery === 'undefined'){
-    console.log("CSV: jQuery is not loaded.  Load jquery before loading csv.js");
+if (typeof $ !== 'function'){
+    console.log("CSV: $ function not loaded.  Load jquery before loading csv.js");
     throw "CSV: jQuery is not loaded";
-}
+} else console.log("html5csv: found jQuery $() function");
 
-window.CSV = (function(){
+if (typeof $.jqplot==='function') console.log("html5csv: found jqplot $.jqplot() ");
+if (typeof LZString === 'object') console.log("html5csv: found LZString");
+if (typeof numeric === 'function') console.log("html5csv: found numericjs numeric() ");
+
+CSV = (function(){
 
     var csvFuncs = {
 	'push': push,
@@ -808,7 +812,7 @@ window.CSV = (function(){
     function jqplot(plotspec, after){
 	var shared = this;
 	var rows = shared.data.rows;
-	var i,l,plots={},plotData=[];
+	var i,l,plots={};
 	var plotName,plotPairs,plotOptions;
 	if (typeof $.jqplot !== 'function')
 	    throw "jqplot is not loaded.  You need to include the css and script tags for the jqplot library and any options";
