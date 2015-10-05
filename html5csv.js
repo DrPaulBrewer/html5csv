@@ -402,12 +402,12 @@ CSV = (function(){
 
     function extend(newCsvFuncs, newCsvShared){
 	if (typeof newCsvFuncs === "object"){ 
-	    $.extend(csvFuncs, newCsvFuncs);
+	    if (newCsvFuncs) $.extend(csvFuncs, newCsvFuncs);
 	} else { 
 	    throw "CSV: extend newCsvFuncs must be either an object with function values to extend csvFuncs or null for no extensions";
 	}
 	if (typeof newCsvShared === "object"){
-	    $.extend(csvShared, newCsvShared);
+	    if (newCsvShared) $.extend(csvShared, newCsvShared);
 	} else if (typeof newCsvShared === "undefined"){
 	    // do nothing
 	} else 

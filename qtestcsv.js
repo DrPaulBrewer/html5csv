@@ -19,10 +19,8 @@ test("CSV.begin() requires valid parameter(s)",1,function(){
     throws(function(){CSV.begin()}, "no parameters");
 });
 
-test("CSV.extend() requires valid parameter(s)",7,function(){
+test("CSV.extend() requires valid parameter(s)",5,function(){
     throws(function(){CSV.extend()}, "no parameters");
-    throws(function(){CSV.extend(null)}, "CSV.extend(null)");
-    throws(function(){CSV.extend(null,null)}, "CSV.extend(null,null)");
     throws(function(){CSV.extend(function(){}, null)}, "CSV.extend(func,null)");
     throws(function(){CSV.extend(null, function(){})}, "CSV.extend(null,func)");
     throws(function(){CSV.extend("hello")}, "CSV.extend(string)");
