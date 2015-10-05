@@ -256,11 +256,11 @@ asyncTest("HTML table data retrieve -- check that new lines and white space are 
 	    deepEqual(D.rows, [['A','B','C'],[1,2,3],[9,8,7]], "retrieved correct data");
 	}
 			     );
-    }, 300);
+    }, 500);
     setTimeout(function(){
 	$('#tab1').remove();
 	start();
-    }, 500);
+    }, 1000);
 });
 
 
