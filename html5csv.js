@@ -23,6 +23,12 @@
 // to the free license.  This may not be the entire list of uses requiring a commercial license.
 //
 //
+
+// 2015-Oct-04 PJB In "strict mode" new JS globals may not be created, so we need to create CSV global 
+// before enabling strict mode.  see http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
+
+CSV = 0;
+
 "use strict";
 
 if (typeof $ !== 'function'){
@@ -1134,5 +1140,8 @@ CSV = (function(){
     }
 
     return CSVRETURN;
+
 })();
+
+console.log(CSV);
 
