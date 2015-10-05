@@ -24,13 +24,6 @@
 //
 //
 
-// 2015-Oct-04 PJB In "strict mode" new JS globals may not be created, so we need to create CSV global 
-// before enabling strict mode.  see http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
-
-CSV = 0;
-
-"use strict";
-
 if (typeof $ !== 'function'){
     console.log("CSV: $ function not loaded.  Load jquery before loading csv.js");
     throw "CSV: jQuery is not loaded";
@@ -41,7 +34,9 @@ if (typeof LZString === 'object') console.log("html5csv: found LZString");
 if (typeof numeric === 'function') console.log("html5csv: found numericjs numeric() ");
 
 CSV = (function(){
-
+    "use strict";
+    // 2015-Oct-04 PJB In "strict mode" new JS globals may not be created, so we need to create CSV global 
+    // before enabling strict mode.  see http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
     var csvFuncs = {
 	'push': push,
 	'call': call,
