@@ -55,7 +55,7 @@ asyncTest("call: called function receives a next callback as first parameter", 1
 	function testFunc(arg1){
 		equal(typeof(arg1), "function", "first parameter is a function");
 	}
-	CSV.begin(csvdata).call(testFunc).go();
+	CSV.begin(csvdata).call(testFunc).go(function(e,d){ start(); });
 });
 
 asyncTest("session CSV create", 7, function(){
