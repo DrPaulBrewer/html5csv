@@ -149,10 +149,13 @@ Input capabilities include:
 * reading from URLs via ajax (same origin restriction applies unless the server sends a CORS header or supports JSONP)
 
 
-####To "Upload" to the CSV app a file of CSV data from the user
+####To "Upload" to the CSV app a file of CSV data 
 ```html
 <input type='file' id='choose' />
 ```
+
+Note:  this code does not immediately read the file chosen in `#choose`, it attaches an event listener to the `#choose` file input and waits for a change.  See Issue #12 for more discussion.
+
 
 ```javascript
      CSV.begin('#choose').....go();
