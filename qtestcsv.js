@@ -65,7 +65,7 @@ asyncTest("call: exception thrown by called function is caught in go finalCallba
 		throw err;
 	}
 	CSV.begin(csvdata).call(badlyBehavingTestFunction).go(function(e,d){
-		equals(e,err);
+		equal(e,err);
 		start();
 	});
 });
