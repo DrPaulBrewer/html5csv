@@ -58,6 +58,18 @@ asyncTest("call: called function receives a next callback as first parameter", 1
 	CSV.begin(csvdata).call(testFunc).go(function(e,d){ start(); });
 });
 
+asyncTest("call: exception thrown by called function is caught in go finalCallback", 1, function(){
+	var csvdata = totallyRandomData();
+	var err = "I am a badly behaving test function"
+	function badlyBehavingTestFunction(){
+		throw err;
+	}
+	CSV.begin(csvdata).call(badlyBehavingTestFunction).go(function(e,d){
+		equals(e,err);
+		start();
+	});
+});
+
 asyncTest("session CSV create", 7, function(){
     var csvName = "session/qtest1";
     var csvdata = totallyRandomData();
