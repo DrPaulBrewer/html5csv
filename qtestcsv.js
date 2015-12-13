@@ -50,6 +50,14 @@ function totallyRandomData(){
     return randomData(n,m);
 }
 
+asyncTest("call: called function receives a next callback as first parameter", 1, function(){
+	var csvdata = totallyRandomData();
+	function testFunc(arg1){
+		equal(typeof(arg1), "function", "first parameter is a function");
+	}
+	CSV.begin(csvdata).call(testFunc).go();
+});
+
 asyncTest("session CSV create", 7, function(){
     var csvName = "session/qtest1";
     var csvdata = totallyRandomData();
