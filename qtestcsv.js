@@ -65,7 +65,7 @@ QUnit.test("issue 13, CSV.begin() should not have a method named literally 'unde
     'use strict';
     assert.expect(1);
     var csvdata = totallyRandomData();
-    assert.ok(typeof(CSV.begin(csvdata)['undefined']!=='undefined'), "github tracker issue 13 exists");
+    assert.ok(typeof(CSV.begin(csvdata)['undefined']==='undefined'), "github tracker issue 13 exists");
 });
 
 QUnit.test("session CSV create", function(assert){
