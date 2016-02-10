@@ -424,7 +424,7 @@ CSV = (function(){
 	}
 	for(i=0,l=cando.length;i<l;++i) 
 	    methods[cando[i]] = plan(cando[i]);
-	for(i=0,l=candone.length;i<l;++i) 
+	for(i=0,l=candone.length;(2*i+1)<l;++i) 
 	    methods[candone[2*i]] = candone[2*i+1];
 	return methods;
     }
