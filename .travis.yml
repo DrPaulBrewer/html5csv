@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "4"
+before_script:
+  - npm i karma -D
+  - npm i karma-cli -D
+  - npm i karma-firefox-launcher -D
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+script:
+  - karma start --browsers Firefox --single-run
