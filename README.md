@@ -256,5 +256,8 @@ If unsure about the wiki, look in the  [html5csv source code](https://github.com
 
 For more examples, read through the unit tests in [qtestcsv.js](https://github.com/DrPaulBrewer/html5csv/blob/master/qtestcsv.js)
 
-You can also [run the unit tests in the Qunit page](http://drpaulbrewer.github.io/html5csv/qtest.html)
+Since Feb.2016, every commit to html5csv is automatically tested in Firefox by travis-ci, generating the clickable "build" badge at the top of this page.
+
+You can also [run the unit tests in your own browser using the Qunit page](http://drpaulbrewer.github.io/html5csv/qtest.html).  Note
+that the code and tests come from the gh-pages branch, which is not updated as frequently as the main branch.
 
