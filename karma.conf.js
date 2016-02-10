@@ -15,7 +15,13 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '*js'
+	"http://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js",
+	"./external-free/jqplot/jquery.jqplot.min.js",
+	"./external-free/jqplot/plugins/jqplot.cursor.min.js",
+	"./external-free/lz-string-1.3.0.js",
+	"./external-free/numeric-1.2.6.js",
+	"./html5csv.js",
+	"./qtestcsv.js"
     ],
 
 
@@ -67,3 +73,7 @@ module.exports = function(config) {
     concurrency: 1
   })
 }
+
+
+
+
