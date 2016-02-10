@@ -23,15 +23,20 @@
 // to the free license.  This may not be the entire list of uses requiring a commercial license.
 //
 //
-"use strict";
 
-if (typeof window.jQuery === 'undefined'){
-    console.log("CSV: jQuery is not loaded.  Load jquery before loading csv.js");
+if (typeof $ !== 'function'){
+    console.log("CSV: $ function not loaded.  Load jquery before loading csv.js");
     throw "CSV: jQuery is not loaded";
-}
+} else console.log("html5csv: found jQuery $() function");
 
-window.CSV = (function(){
+if (typeof $.jqplot==='function') console.log("html5csv: found jqplot $.jqplot() ");
+if (typeof LZString === 'object') console.log("html5csv: found LZString");
+if (typeof numeric === 'function') console.log("html5csv: found numericjs numeric() ");
 
+CSV = (function(){
+    "use strict";
+    // 2015-Oct-04 PJB In "strict mode" new JS globals may not be created, so we need to create CSV global 
+    // before enabling strict mode.  see http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
     var csvFuncs = {
 	'push': push,
 	'call': call,
@@ -43,6 +48,7 @@ window.CSV = (function(){
 	'ols': ols,
 	'save': save,
 	'download': download,
+	'pca': pca
     };
 
     var csvShared = { 
@@ -309,6 +315,42 @@ window.CSV = (function(){
 		return [row]; // inside another array to defeat flattening
 	    }).get();
 	},
+	col: function(X,j){ 
+	    var i,l,d=[];
+	    for(i=0,l=X.length;i<l;++i) d.push(X[i][j]);
+	    return d;
+	},
+	colAvg: function(X){ 
+	    var i,l,j,k,s=[];
+	    for(i=0,l=X[0].length; i<l; ++i) s[i]=0;
+	    for(i=0,l=X.length;i<l;++i)
+		for(j=0,k=s.length;j<k;++j)
+		    s[j]+=X[i][j]/l;
+	    return s;
+	},
+	colAvg2: function(X){
+	    var i,l,j,k,v,s=[];
+	    for(i=0,l=X[0].length; i<l; ++i) s[i]=0;
+	    for(i=0,l=X.length;i<l;++i)
+		for(j=0,k=s.length;j<k;++j){
+		    v = X[i][j];
+		    s[j]+=(v*v)/l;
+		}
+	    return s;
+	},
+	colVar: function(X, ssc, zeromean){
+	    // ssc is boolean option for small sample correction
+	    // zeromean is boolean option to ignore sample mean as if 0.0
+	    var meanOfSquare = this.colAvg2(X);
+	    var mean = this.colAvg(X);
+	    var scale = (ssc)?(X.length/(X.length-1)): 1;
+	    var i,l,squareOfMean=[], result=[];
+	    for(i=0,l=X[0].length; i<l; ++i){
+		squareOfMean[i] = (zeromean)? 0: (mean[i]*mean[i]);
+		result[i] = scale * (meanOfSquare[i] - squareOfMean[i]);
+	    }
+	    return result
+	},
 	nextTask: function (jqXHR, textStatus){
 	    var shared = this;
 	    var task;
@@ -355,12 +397,12 @@ window.CSV = (function(){
 
     function extend(newCsvFuncs, newCsvShared){
 	if (typeof newCsvFuncs === "object"){ 
-	    $.extend(csvFuncs, newFuncs);
+	    if (newCsvFuncs) $.extend(csvFuncs, newCsvFuncs);
 	} else { 
 	    throw "CSV: extend newCsvFuncs must be either an object with function values to extend csvFuncs or null for no extensions";
 	}
 	if (typeof newCsvShared === "object"){
-	    $.extend(csvShared, newCsvShared);
+	    if (newCsvShared) $.extend(csvShared, newCsvShared);
 	} else if (typeof newCsvShared === "undefined"){
 	    // do nothing
 	} else 
@@ -531,13 +573,6 @@ window.CSV = (function(){
 		    actualArgs.push(shared.init.options[dict[i]]);
 		}
 		shared.data.rows = func.apply(shared, actualArgs);
-		if (shared.init.options.header){
-		    if (shared.init.options.header.length === shared.data.rows[0].length){
-			shared.data.rows.unshift(shared.init.options.header);
-		    } else {
-			throw "CSV: fetch: special: header length mismatches data";
-		    }
-		}
 	    })();
 	} else if (shared.init.csvName){
 	    return shared.ajaxMapper.apply(shared,['fetch',shared.init.csvName]);
@@ -560,6 +595,13 @@ window.CSV = (function(){
 	    shared.data.rows = shared.fill(shared.init.options.dim,
 					   shared.init.fill);
 	} else throw "CSV: fetch unknown csv data source";
+	if ((shared.init) && (shared.init.options) && (shared.init.options.header)){
+	    if (shared.init.options.header.length === shared.data.rows[0].length){
+		shared.data.rows.unshift(shared.init.options.header);
+	    } else {
+		throw "CSV: fetch: option header: length mismatches data";
+	    }
+	}
 	if (doNextTask) shared.nextTask();
     }
 		   
@@ -771,8 +813,10 @@ window.CSV = (function(){
     function jqplot(plotspec, after){
 	var shared = this;
 	var rows = shared.data.rows;
-	var i,l,plots={},plotData=[];
+	var i,l,plots={};
 	var plotName,plotPairs,plotOptions;
+	if (typeof $.jqplot !== 'function')
+	    throw "jqplot is not loaded.  You need to include the css and script tags for the jqplot library and any options";
 	for(i=0,l=plotspec.length;i<l;++i){
 	    plotName    = plotspec[i][0];
 	    plotPairs   = plotspec[i][1];
@@ -829,7 +873,7 @@ window.CSV = (function(){
 		    colData[i-1] = colOrFunc(i, rowobj);
 		}
 	    } else {
-		for(i=1,l=rows.length; i<l; ++i) colData[i-1]=func(i,rows[i]);	    
+		for(i=1,l=rows.length; i<l; ++i) colData[i-1]=colOrFunc(i,rows[i]);	    
 	    }
 	} else throw "CSV: appendCol second parameter must be data column or function";
 	if (h) colData.unshift(colName);
@@ -893,23 +937,86 @@ window.CSV = (function(){
 	}
 	return shared.nextTask();
     }
+
+    function pca(indep, options){
+	var shared = this;
+	var X=shared.submatrix(null, indep);
+	var C=shared.colAvg(X);
+	var V=shared.colVar(X, (options && options.ssc), (!options || !options.center) );
+	var i,j,k,l,adjX=[];
+	shared.data.pca = {
+	    'indep': indep,
+	    'options': options,
+	    'mean':  C,
+	    'variance': V
+	}; 
+	if (!window.numeric) throw "CSV: pca requires loading numeric.js";
+	for(i=0,l=X.length; i<l; ++i){
+	    adjX[i] = [];
+	    for(j=0,k=X[i].length; j<k; ++j){
+		adjX[i][j] = X[i][j];
+		if (options && options.center) adjX[i][j] += -1*C[j];
+		if (options && options.scale)  adjX[i][j] *=  1/Math.sqrt(V[j]);
+	    }	    
+	}
+	shared.data.pca.adjX = adjX; 
+	shared.data.pca.svd = numeric.svd(adjX);
+	if (options && options.newcols){ 
+	    Array.prototype.push.apply(shared.data.rows[0], options.newcols); 
+	    for(i=1,l=shared.data.rows.length;i<l;++i)
+		for(j=0,k=options.newcols.length; j<k; ++j)
+		    shared.data.rows[i].push(shared.data.pca.svd.U[(i-1)][j]*shared.data.pca.svd.S[j]);
+	}
+	if (options && options.trash) delete shared.data.pca;
+	return shared.nextTask();
+    }
     
-    function download(dlname){
-	// download via dataURL and self-clicking link
+    function download(dlname, strict){
+	// download via blob(IE) or dataURL and self-clicking link (others)
+	// if strict is truthy, any error is thrown and sent to final callback
+	// otherwise, errors are ignored
 	// I would like to thank adeneo, http://stackoverflow.com/users/965051/adeneo
 	// for inspiration and showing me how to use a data URL this way
 	// in http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
+	// Adaneo's solution works on Firefox and Chrome
+	// Later Manu Sharma proposed an IE solution
+	// in http://stackoverflow.com/a/27699027/103081
 	var shared = this;
 	var rows=shared.data.rows;
-	var i,l, csvString='';
+	var i,l, csvString='', errormsg='';
+	var fname = dlname || (csvname+'.csv');
 	for(i=0,l=rows.length; i<l; ++i) csvString += '"'+rows[i].join('","')+'"'+"\n";
-	var a = document.createElement('a');
-	a.href = 'data:attachment/csv,'+encodeURIComponent(csvString);
-	a.target = '_blank';
-	a.id = 'dataURLdownloader';
-	a.download = dlname || (csvname+'.csv');
-	document.body.appendChild(a);
-	a.click();
+	// try IE solution first
+	if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+	    try {
+		var blob = new Blob(
+		    [decodeURIComponent(encodeURI(csvString))], {
+			type: "text/csv;charset=utf-8;"
+		    });
+		navigator.msSaveBlob(blob, fname);
+	    } catch(e){ 
+		errormsg = "error on CSV.download, IE blob branch:"+e;
+		console.log(errormsg);
+		if (strict) throw errormsg; 
+	    }
+	} else {
+	    // try Firefox/Chrome solution here
+	    try {
+		var a = document.createElement('a');
+		if (!('download' in a)) throw "a does not support download";
+		a.href = 'data:attachment/csv,'+encodeURIComponent(csvString);
+		a.target = '_blank';
+		// use class instead of id here -- PJB 2015.01.10
+		a.class = 'dataURLdownloader';
+		a.download = fname;
+		document.body.appendChild(a);
+		a.click();
+	    } catch(e){
+		errormsg = "error on CSV.download, data url branch:"+e;
+		console.log(errormsg);
+		if (strict) throw errormsg; 
+	    }
+	}
 	shared.nextTask();
     }
 
@@ -1028,5 +1135,8 @@ window.CSV = (function(){
     }
 
     return CSVRETURN;
+
 })();
+
+console.log(CSV);
 

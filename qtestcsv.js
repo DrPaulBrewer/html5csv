@@ -3,33 +3,43 @@
 // License:  GNU GPL v3
 // see file html5csv.js for additional license details
 
+/* jshint strict:true, undef:true, browser:true, qunit:true, jquery:true, lastsemic:true  */
+/* globals CSV:false */
+
 localStorage.clear();
 sessionStorage.clear();
 
-test("CSV exists", 1, function(){
-    ok(!!CSV, "CSV exists");
+QUnit.test("CSV exists", function(assert){
+    'use strict';
+    assert.expect(1);
+    assert.ok(CSV, "CSV exists");
 });
 
-test("CSV has begin, extend methods",2,function(){
-    ok( (typeof CSV.begin ==="function"), "CSV.begin");
-    ok( (typeof CSV.extend ==="function"), "CSV.extend");
+QUnit.test("CSV has begin, extend methods",function(assert){
+    'use strict';
+    assert.expect(2);
+    assert.ok( (typeof CSV.begin ==="function"), "CSV.begin");
+    assert.ok( (typeof CSV.extend ==="function"), "CSV.extend");
 });
 
-test("CSV.begin() requires valid parameter(s)",1,function(){
-    throws(function(){CSV.begin()}, "no parameters");
+QUnit.test("CSV.begin() requires valid parameter(s)",function(assert){
+    'use strict';
+    assert.expect(1);
+    assert.throws(function(){CSV.begin();}, "no parameters");
 });
 
-test("CSV.extend() requires valid parameter(s)",7,function(){
-    throws(function(){CSV.extend()}, "no parameters");
-    throws(function(){CSV.extend(null)}, "CSV.extend(null)");
-    throws(function(){CSV.extend(null,null)}, "CSV.extend(null,null)");
-    throws(function(){CSV.extend(function(){}, null)}, "CSV.extend(func,null)");
-    throws(function(){CSV.extend(null, function(){})}, "CSV.extend(null,func)");
-    throws(function(){CSV.extend("hello")}, "CSV.extend(string)");
-    throws(function(){CSV.extend(34)}, "CSV.extend(number)");
+QUnit.test("CSV.extend() requires valid parameter(s)",function(assert){
+    'use strict';
+    assert.expect(5);
+    assert.throws(function(){CSV.extend()}, "no parameters");
+    assert.throws(function(){CSV.extend(function(){}, null)}, "CSV.extend(func,null)");
+    assert.throws(function(){CSV.extend(null, function(){})}, "CSV.extend(null,func)");
+    assert.throws(function(){CSV.extend("hello")}, "CSV.extend(string)");
+    assert.throws(function(){CSV.extend(34)}, "CSV.extend(number)");
 });
 
 function randomData(n,m){
+    'use strict';
     var h = 'abcdefghijklmnopqrstuvwxyz'.split('');
     var data = [];
     var i,j,row;
@@ -45,149 +55,148 @@ function randomData(n,m){
 }
 
 function totallyRandomData(){
+    'use strict';
     var n = 100 + Math.floor(Math.random()*400);
     var m = 5 + Math.floor(Math.random()*10);
     return randomData(n,m);
 }
 
-asyncTest("call: called function receives a next callback as first parameter", 1, function(){
-	var csvdata = totallyRandomData();
-	function testFunc(arg1){
-		equal(typeof(arg1), "function", "first parameter is a function");
-	}
-	CSV.begin(csvdata).call(testFunc).go(function(e,d){ start(); });
-});
-
-asyncTest("call: exception thrown by called function is caught in go finalCallback", 1, function(){
-	var csvdata = totallyRandomData();
-	var err = "I am a badly behaving test function"
-	function badlyBehavingTestFunction(){
-		throw err;
-	}
-	CSV.begin(csvdata).call(badlyBehavingTestFunction).go(function(e,d){
-		equal(e,err);
-		start();
-	});
-});
-
-asyncTest("session CSV create", 7, function(){
+QUnit.test("session CSV create", function(assert){
+    'use strict';
+    assert.expect(7);
+    var done = assert.async();
     var csvName = "session/qtest1";
     var csvdata = totallyRandomData();
     window.sessionStorage.clear();
     CSV.begin(csvdata).save(csvName).go(
 	function(e,D){
-	    ok(!e, "errors: "+e);
-	    ok(!!D, "data non-null");
-	    ok(!!csvdata, "csvdata input non-null");
-	    ok(!!D.rows, "data.rows non-null");
-	    equal(D.rows.length, csvdata.length, "same # of rows");
-	    deepEqual(D.rows, csvdata, "go -- data.rows matches input");
+	    assert.ok(!e, "errors: "+e);
+	    assert.ok(D, "data non-null");
+	    assert.ok(csvdata, "csvdata input non-null");
+	    assert.ok(D.rows, "data.rows non-null");
+	    assert.equal(D.rows.length, csvdata.length, "same # of rows");
+	    assert.deepEqual(D.rows, csvdata, "go -- data.rows matches input");
 	}
     );
     setTimeout(
 	function(){ 
-	    ok(!!window.sessionStorage[csvName], "session storage entry exists");
-	    start();
+	    assert.ok(window.sessionStorage[csvName], "session storage entry exists");
+	    done();
 	},
 	2000);
 });
 
 
-asyncTest("%U creates uniformRandomMatrix",13,function(){
+QUnit.test("%U creates uniformRandomMatrix",function(assert){
+    'use strict';
+    assert.expect(13);
+    var done = assert.async();
     CSV.begin('%U',{}).go(function(e,D){
-	ok(e,"should give error: "+e);
-	equal(D,null,"D should be null");
+	assert.ok(e,"should give error: "+e);
+	assert.equal(D,null,"D should be null");
     });
     CSV.begin('%U',{dim:[1,100000]}).go(function(e,D){
 	var sum=0.0, sumsq=0.0;
-	ok(!e, "error: "+e);
-	ok(!!D, "D exists");
-	ok(!!D.rows, "D.rows exists");
-	equal(D.rows.length, 1, "1 row");
-	equal(D.rows[0].length, 100000, "100,000 cols");
-	ok(Math.min.apply(Math,D.rows[0])>0.0, "smallest of 100,000 > 0.0");
-	ok(Math.min.apply(Math,D.rows[0])<0.001, "smallest of 100,000 < 0.01");
-	ok(Math.max.apply(Math,D.rows[0])<1.0, "largest of 100,000 < 1.0");
-	ok(Math.max.apply(Math,D.rows[0])>0.999, "largest of 100,000 > 0.99");
+	assert.ok(!e, "error: "+e);
+	assert.ok(D, "D exists");
+	assert.ok(D.rows, "D.rows exists");
+	assert.equal(D.rows.length, 1, "1 row");
+	assert.equal(D.rows[0].length, 100000, "100,000 cols");
+	assert.ok(Math.min.apply(Math,D.rows[0])>0.0, "smallest of 100,000 > 0.0");
+	assert.ok(Math.min.apply(Math,D.rows[0])<0.001, "smallest of 100,000 < 0.01");
+	assert.ok(Math.max.apply(Math,D.rows[0])<1.0, "largest of 100,000 < 1.0");
+	assert.ok(Math.max.apply(Math,D.rows[0])>0.999, "largest of 100,000 > 0.99");
 	for(var i=0;i<100000;++i){
 	    sum += D.rows[0][i];
 	    sumsq += Math.pow(D.rows[0][i],2);
 	}
-	ok(Math.abs(sum-50000)<1000, "sum of 100,000 is 50,000 +/- 1,000");
-	ok(Math.abs(sumsq-33333)<1000, "sumsq of 100,000 is 33,333 +/- 1,000");
-	start();
+	assert.ok(Math.abs(sum-50000)<1000, "sum of 100,000 is 50,000 +/- 1,000");
+	assert.ok(Math.abs(sumsq-33333)<1000, "sumsq of 100,000 is 33,333 +/- 1,000");
+	done();
     });
 });
 
-asyncTest("%N creates normalRandomMatrix",13,function(){
+QUnit.test("%N creates normalRandomMatrix",function(assert){
+    'use strict';
+    assert.expect(13);
+    var done = assert.async();
     CSV.begin('%N',{}).go(function(e,D){
-	ok(e,"should give error: "+e);
-	equal(D,null,"D should be null");
+	assert.ok(e,"should give error: "+e);
+	assert.equal(D,null,"D should be null");
     });
     CSV.begin('%N',{dim:[1,100000]}).go(function(e,D){
 	var sum=0.0, sumsq=0.0;
-	ok(!e, "error: "+e);
-	ok(!!D, "D exists");
-	ok(!!D.rows, "D.rows exists");
-	equal(D.rows.length, 1, "1 row");
-	equal(D.rows[0].length, 100000, "100,000 cols");
-	ok(Math.min.apply(Math,D.rows[0])>-6.0, "smallest of 100,000 > -6.0");
-	ok(Math.min.apply(Math,D.rows[0])<-3.5, "smallest of 100,000 < -3.5");
-	ok(Math.max.apply(Math,D.rows[0])>3,5, "largest of 100,000 > 3.5");
-	ok(Math.max.apply(Math,D.rows[0])<6.0, "largest of 100,000 < 6.0");
+	assert.ok(!e, "error: "+e);
+	assert.ok(D, "D exists");
+	assert.ok(D.rows, "D.rows exists");
+	assert.equal(D.rows.length, 1, "1 row");
+	assert.equal(D.rows[0].length, 100000, "100,000 cols");
+	assert.ok(Math.min.apply(Math,D.rows[0])>-6.0, "smallest of 100,000 > -6.0");
+	assert.ok(Math.min.apply(Math,D.rows[0])<-3.5, "smallest of 100,000 < -3.5");
+	assert.ok(Math.max.apply(Math,D.rows[0])>3,5, "largest of 100,000 > 3.5");
+	assert.ok(Math.max.apply(Math,D.rows[0])<6.0, "largest of 100,000 < 6.0");
 	for(var i=0;i<100000;++i){
 	    sum += D.rows[0][i];
 	    sumsq += Math.pow(D.rows[0][i],2);
 	}
-	ok(Math.abs(sum)<1000, "sum of 100,000 is 0 +/- 1000");
-	ok(Math.abs(sumsq-100000)<5000, "sumsq of 100,000 is 100,000 +/- 5,000");
-	start();
+	assert.ok(Math.abs(sum)<1000, "sum of 100,000 is 0 +/- 1000");
+	assert.ok(Math.abs(sumsq-100000)<5000, "sumsq of 100,000 is 100,000 +/- 5,000");
+	done();
     });
 });
 
-asyncTest("%I creates identityMatrix",6,function(){
+QUnit.test("%I creates identityMatrix",function(assert){
+    'use strict';
+    assert.expect(6);
+    var done = assert.async();
     CSV.begin('%I',{}).go(function(e,D){
-	ok(e,"should give error: "+e);
-	equal(D,null,"D should be null");
+	assert.ok(e,"should give error: "+e);
+	assert.equal(D,null,"D should be null");
     });
     CSV.begin('%I', {dim:[3,3]}).go(
 	function(e,D){
-	    ok(!e, "error: "+e);
-	    ok(!!D, "D exists");
-	    ok(!!D.rows, "D.rows exists");
-	    deepEqual(D.rows,[[1,0,0],[0,1,0],[0,0,1]],"correct matrix");
-	    start();
+	    assert.ok(!e, "error: "+e);
+	    assert.ok(D, "D exists");
+	    assert.ok(D.rows, "D.rows exists");
+	    assert.deepEqual(D.rows,[[1,0,0],[0,1,0],[0,0,1]],"correct matrix");
+	    done();
 	}
     );
 });
 
-asyncTest("%D creates diagonalMatrix",6,function(){
+QUnit.test("%D creates diagonalMatrix",function(assert){
+    'use strict';
+    assert.expect(6);
+    var done = assert.async();
     CSV.begin('%D',{}).go(function(e,D){
-	ok(e,"should give error: "+e);
-	equal(D,null,"D should be null");
+	assert.ok(e,"should give error: "+e);
+	assert.equal(D,null,"D should be null");
     });
     CSV.begin('%D', {diag:[-7,3,0.5]}).go(
 	function(e,D){
-	    ok(!e, "error: "+e);
-	    ok(!!D, "D exists");
-	    ok(!!D.rows, "D.rows exists");
-	    deepEqual(D.rows,[[-7,0,0],[0,3,0],[0,0,0.5]],"correct matrix");
-	    start();
+	    assert.ok(!e, "error: "+e);
+	    assert.ok(D, "D exists");
+	    assert.ok(D.rows, "D.rows exists");
+	    assert.deepEqual(D.rows,[[-7,0,0],[0,3,0],[0,0,0.5]],"correct matrix");
+	    done();
 	}
     );
 });
 
 
-asyncTest("%F creates matrix from func(i,j)",4,function(){
+QUnit.test("%F creates matrix from func(i,j)",function(assert){
+    'use strict';
+    assert.expect(4);
+    var done = assert.async();
     CSV.begin('%F',{}).go(function(e,D){
-	ok(e,"should give error: "+e);
-	equal(D,null,"D should be null");
+	assert.ok(e,"should give error: "+e);
+	assert.equal(D,null,"D should be null");
     });
     CSV.begin('%F', {dim:[3,4], func: function(i,j){ return i*j }}).
 	go(
 	    function(e,D){
-		ok(!e, "error: "+e);
-		deepEqual(D.rows,
+		assert.ok(!e, "error: "+e);
+		assert.deepEqual(D.rows,
 			  [
 			      [0,0,0,0],
 			      [0,1,2,3],
@@ -195,63 +204,71 @@ asyncTest("%F creates matrix from func(i,j)",4,function(){
 			  ],
 			  "correct matrix"
 			 );
-		start();
+		done();
 	    }
 	);
 });
 
 
-asyncTest("local CSV create", 3, function(){
+QUnit.test("local CSV create", function(assert){
+    'use strict';
+    assert.expect(3);
+    var done = assert.async();
     var csvname = "local/qtest1";
     var csvdata = totallyRandomData();
     window.localStorage.clear();
     CSV.begin(csvdata).save(csvname).go(
 	function(e,D){
-	    ok(!e, "errors: "+e); 
-	    deepEqual(D.rows, csvdata, "go -- this.data.rows matches input");
+	    assert.ok(!e, "errors: "+e); 
+	    assert.deepEqual(D.rows, csvdata, "go -- this.data.rows matches input");
 	}
     );
     setTimeout(
 	function(){
-	    ok(!!window.localStorage[csvname], "local storage entry exists");
+	    assert.ok(window.localStorage[csvname], "local storage entry exists");
 	    window.localStorage.clear();
-	    start();
+	    done();
 	},
 	2000);
 });
 
-function postCreate(func, csvname, csvdata){
-    return function(){
+function postCreate(n, func, csvname, csvdata){
+    'use strict';
+    return function(assert){
+	assert.expect(n);
+	var done = assert.async();
 	var csvn = csvname || "session/qtest";
 	var csvd = csvdata || totallyRandomData();
 	window.sessionStorage.clear();
 	CSV.begin(csvd).save(csvn).go(
 	    function(e,unused){ 
 		if (e) throw "onCreate:"+e;
-		func.apply({}, [csvn,csvd] ) }
+		func.apply({}, [assert,done,csvn,csvd] ) }
 	);
-    }
+    };
 }
 
-asyncTest("session CSV retrieve", 2, postCreate(function(csvname, csvdata){
+QUnit.test("session CSV retrieve", postCreate(2, function(assert, done, csvname, csvdata){
+    'use strict';
     CSV.begin(csvname).go(
 	function(e,D){
-	    ok(!e, "errors: "+e); 
-	    deepEqual(D.rows, csvdata, "retrieved data matches");
-	    start();
+	    assert.ok(!e, "errors: "+e); 
+	    assert.deepEqual(D.rows, csvdata, "retrieved data matches");
+	    done();
 	}
     );
 },null,null));
 
      
      
-asyncTest("local CSV to HTML table display and retrieve", 3, postCreate(function(csvname,csvdata){
+QUnit.test("local CSV to HTML table display and retrieve", postCreate(3, function(assert,done,csvname,csvdata){
+    'use strict';
     CSV.begin(csvname).table("tab1",{header:1, caption: 'CSV/HTML display-retrieve test data'}).go(
 	function(e,D){
-	    ok(!e, "errors: "+e); 
+	    assert.ok(!e, "errors: "+e); 
 	    CSV.begin('#tab1').go(
 		function(ee,DD){
-		    ok(!ee,"errors: "+ee);
+		    assert.ok(!ee,"errors: "+ee);
 		    equal(JSON.stringify(D.rows), JSON.stringify(DD.rows), "data matches");
 		}
 	    );
@@ -259,34 +276,38 @@ asyncTest("local CSV to HTML table display and retrieve", 3, postCreate(function
     );
     setTimeout(
 	function(){
-	    start();
+	    done();
 	    $('#tab1').remove();
 	}, 
 	3000);
 },null,null));
 
 
-asyncTest("HTML table data retrieve -- check that new lines and white space are trimmed",3, function(){
+QUnit.test("HTML table data retrieve -- check that new lines and white space are trimmed",function(assert){
+    'use strict';
+    assert.expect(3);
+    var done = assert.async();
     var newHTML = "<div id='tab1'><table>\n<tr>\n<th>      A    \n</th><th>  B    \n            \n</th><th>\n\nC</th></tr><tr><td>1</td><td>2\n\n\n\n\n      \n</td><td>3\n\n</td></tr><tr><td>     9            \n</td><td>       \n   8     \n</td><td>\n               7           \n</td>\n\n\n</tr>        \n       </table>       \n</div>";
     $(document.body).append(newHTML);
     setTimeout(function(){
-	ok($('#tab1').html().split("\n").length>10, "jQuery retrieved html contains newlines");
+	assert.ok($('#tab1').html().split("\n").length>10, "jQuery retrieved html contains newlines");
     }, 200);
     setTimeout(function(){
 	CSV.begin('#tab1').go(function(e,D){
-	    ok(!e, "error: "+e);
-	    deepEqual(D.rows, [['A','B','C'],[1,2,3],[9,8,7]], "retrieved correct data");
+	    assert.ok(!e, "error: "+e);
+	    assert.deepEqual(D.rows, [['A','B','C'],[1,2,3],[9,8,7]], "retrieved correct data");
 	}
 			     );
-    }, 300);
+    }, 500);
     setTimeout(function(){
 	$('#tab1').remove();
-	start();
-    }, 500);
+	done();
+    }, 1000);
 });
 
 
-asyncTest("appendCol -- even/odd", 2, postCreate(function(csvname,csvdata){
+QUnit.test("appendCol -- even/odd",postCreate(2, function(assert,done,csvname,csvdata){
+    'use strict';
     CSV.begin(csvname).
 	appendCol("parity", [1,0]).
 	go(function(e,D){
@@ -294,37 +315,60 @@ asyncTest("appendCol -- even/odd", 2, postCreate(function(csvname,csvdata){
 	    var i,l;
 	    for(i=1,l=checkdata.length; i<l; ++i) checkdata[i].push(i%2);
 	    checkdata[0].push('parity');
-	    ok(!e, "errors: "+e);
-	    deepEqual(D.rows, checkdata, "data matches alternate calculation");
-	    start();
+	    assert.ok(!e, "errors: "+e);
+	    assert.deepEqual(D.rows, checkdata, "data matches alternate calculation");
+	    done();
 	});
-	    
 }));
 
-asyncTest("appendCol -- detect length mismatch", 2, postCreate(function(csvname,csvdata){
+QUnit.test("appendCol -- sum function, !rowprops", postCreate(3, function(assert,done,csvname,csvdata){
+    'use strict';
+    CSV.begin(csvname).
+	appendCol("sum", function(index,row){
+	    for(var i=0,l=row.length,s=0;i<l;++i)
+		s+=row[i];
+	    return s;
+	}, false).
+	go(function(e,D){
+	    var i,j,l,ll,s=0;
+	    assert.ok(!e, "errors: "+e);
+	    assert.ok(D.rows[0][csvdata[0].length]==='sum', "sets new colname 'sum'");
+	    for(i=1,l=D.rows.length;i<l;++i){
+		for(j=0,ll=D.rows[i].length-1;j<ll;++j)
+		    s+=D.rows[i][j];
+		s-=D.rows[i][ll];
+	    }
+	    assert.ok(s===0, "bad test sum, should be zero, got: "+s);
+	    done();
+	});
+}));
+
+QUnit.test("appendCol -- detect length mismatch", postCreate(2, function(assert,done,csvname,csvdata){
+    'use strict';
     CSV.begin(csvname).
 	appendCol("parity", [1,0], "strict").
 	go(function(e,D){
-	    ok(e, "should report error: "+e);
-	    equal(D, null, "null data expected");
-	    start();
+	    assert.ok(e, "should report error: "+e);
+	    assert.equal(D, null, "null data expected");
+	    done();
 	});
-	    
+    
 }));
 
-asyncTest("editor -- do nothing", 6, postCreate(function(csvname,csvdata){
+QUnit.test("editor -- do nothing", postCreate(6, function(assert,done,csvname,csvdata){
+    'use strict';
     CSV.begin(csvname).
 	editor("ed1",true).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    ok(!!D, "D not null");
-	    ok(!!D.rows, "D.rows not null");
-	    ok(D.rows.length, "D.rows.length not zero");
-	    equal(D.rows.length, csvdata.length, "D.rows.length == csvdata.length");
-	    equal(JSON.stringify(csvdata), 
+	    assert.ok(!e, "errors: "+e); 
+	    assert.ok(D, "D not null");
+	    assert.ok(D.rows, "D.rows not null");
+	    assert.ok(D.rows.length, "D.rows.length not zero");
+	    assert.equal(D.rows.length, csvdata.length, "D.rows.length == csvdata.length");
+	    assert.equal(JSON.stringify(csvdata), 
 		  JSON.stringify(D.rows),
 		  'data unchanged');
-	    start();
+	    done();
 	});
     setTimeout(
 	function(){
@@ -333,18 +377,19 @@ asyncTest("editor -- do nothing", 6, postCreate(function(csvname,csvdata){
 	1000);
 }));
 
-asyncTest("editor -- change 2nd b to 8.5", 3, postCreate(function(csvname,csvdata){
+QUnit.test("editor -- change 2nd b to 8.5", postCreate(3, function(assert,done,csvname,csvdata){
+    'use strict';
     var old = csvdata[2][1];
     CSV.begin(csvname).
 	editor("ed1",true).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    equal(D.rows[2][1], 8.5, "new value set correctly");
+	    assert.ok(!e, "errors: "+e); 
+	    assert.equal(D.rows[2][1], 8.5, "new value set correctly");
 	    D.rows[2][1] = old;
-	    equal(JSON.stringify(csvdata), 
-		  JSON.stringify(D.rows),
-		  'data otherwise unchanged');
-	    start();
+	    assert.equal(JSON.stringify(csvdata), 
+			 JSON.stringify(D.rows),
+			 'data otherwise unchanged');
+	    done();
 	});
     setTimeout(
 	function(){
@@ -359,7 +404,8 @@ asyncTest("editor -- change 2nd b to 8.5", 3, postCreate(function(csvname,csvdat
     
 }));
 
-asyncTest("start editor from button using finalize -- then change 2nd b to 8.5", 4, postCreate(function(csvname,csvdata){
+QUnit.test("start editor from button using finalize -- then change 2nd b to 8.5", postCreate(4, function(assert,done,csvname,csvdata){
+    'use strict';
     var old = csvdata[2][1];
     $(document.body).append('<div id="testFinalizeDiv"></div>');
     $('#testFinalizeDiv').html("<button id='startEditorButton'>start</button>");
@@ -367,13 +413,13 @@ asyncTest("start editor from button using finalize -- then change 2nd b to 8.5",
 	CSV.begin(csvname).
 	    editor("ed1",true).
 	    finalize(function(e,D){
-		ok(!e, "errors: "+e); 
-		equal(D.rows[2][1], 8.5, "new value set correctly");
+		assert.ok(!e, "errors: "+e); 
+		assert.equal(D.rows[2][1], 8.5, "new value set correctly");
 		D.rows[2][1] = old;
-		equal(JSON.stringify(csvdata), 
+		assert.equal(JSON.stringify(csvdata), 
 		      JSON.stringify(D.rows),
 		      'data otherwise unchanged');
-		start();
+		done();
 		$('#testFinalizeDiv').remove();
 	    });
     $('#startEditorButton').click(workflow);
@@ -386,7 +432,7 @@ asyncTest("start editor from button using finalize -- then change 2nd b to 8.5",
     // check console log for the warning message
     setTimeout(
 	function(){
-	    equal(workflow(), null, "handler returns null when work in progress");
+	    assert.equal(workflow(), null, "handler returns null when work in progress");
 	},
 	1050);    
     setTimeout(
@@ -402,18 +448,19 @@ asyncTest("start editor from button using finalize -- then change 2nd b to 8.5",
     
 }));
 
-asyncTest("editor -- change 52nd b to 8.5 with b=50,e=60", 3, postCreate(function(csvname,csvdata){
+QUnit.test("editor -- change 52nd b to 8.5 with b=50,e=60", postCreate(3, function(assert,done,csvname,csvdata){
+    'use strict';
     var old = csvdata[52][1];
     CSV.begin(csvname).
 	editor("ed1",true,50,60).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    equal(D.rows[52][1], 8.5, "new value set correctly");
+	    assert.ok(!e, "errors: "+e); 
+	    assert.equal(D.rows[52][1], 8.5, "new value set correctly");
 	    D.rows[52][1] = old;
-	    equal(JSON.stringify(csvdata), 
-		  JSON.stringify(D.rows),
-		  'data otherwise unchanged');
-	    start();
+	    assert.equal(JSON.stringify(csvdata), 
+			 JSON.stringify(D.rows),
+			 'data otherwise unchanged');
+	    done();
 	});
     setTimeout(
 	function(){
@@ -429,20 +476,21 @@ asyncTest("editor -- change 52nd b to 8.5 with b=50,e=60", 3, postCreate(functio
 }));
 
 
-asyncTest("editor -- change last a to 23, scrollable", 4, postCreate(function(csvname,csvdata){
+QUnit.test("editor -- change last a to 23, scrollable", postCreate(4, function(assert,done,csvname,csvdata){
+    'use strict';
     var lastRow = csvdata.length-1;
     var old = csvdata[lastRow][0];
     CSV.begin(csvname).
 	editor("edscrollable",true).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    equal(D.rows.length, lastRow+1, "lengths equal");
-	    equal(D.rows[lastRow][0], 23, "new value set correctly");
+	    assert.ok(!e, "errors: "+e); 
+	    assert.equal(D.rows.length, lastRow+1, "lengths equal");
+	    assert.equal(D.rows[lastRow][0], 23, "new value set correctly");
 	    D.rows[lastRow][0] = old;
-	    equal(JSON.stringify(csvdata), 
-		  JSON.stringify(D.rows),
+	    assert.equal(JSON.stringify(csvdata), 
+			 JSON.stringify(D.rows),
 		  'data otherwise unchanged');
-	    start();
+	    done();
 	});
     setTimeout(
 	function(){
@@ -457,19 +505,20 @@ asyncTest("editor -- change last a to 23, scrollable", 4, postCreate(function(cs
     
 }));
 
-asyncTest("editor -- change last a to 23 -- header off", 3, postCreate(function(csvname,csvdata){
+QUnit.test("editor -- change last a to 23 -- header off", postCreate(3, function(assert,done,csvname,csvdata){
+    'use strict';
     var lastRow = csvdata.length-1;
     var old = csvdata[lastRow][0];
     CSV.begin(csvname).
 	editor("ed1",false).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    equal(D.rows[lastRow][0], 23, "new value set correctly");
+	    assert.ok(!e, "errors: "+e); 
+	    assert.equal(D.rows[lastRow][0], 23, "new value set correctly");
 	    D.rows[lastRow][0] = old;
-	    equal(JSON.stringify(csvdata), 
+	    assert.equal(JSON.stringify(csvdata), 
 		  JSON.stringify(D.rows),
 		  'data otherwise unchanged');
-	    start();
+	    done();
 	});
     setTimeout(
 	function(){
@@ -486,17 +535,18 @@ asyncTest("editor -- change last a to 23 -- header off", 3, postCreate(function(
 
 var postLMlength = 4000;
 
-function postLM(coeff, func){
+function postLM(coeff, ntests, func){
+    'use strict';
     var M = randomData(postLMlength, 4);
     var i,l;
     M[0][4] = 'z';
     for(i=1,l=M.length;i<l;++i) M[i][4] = coeff[0]*M[i][0]+coeff[1]*M[i][1]+coeff[2]*M[i][2]+coeff[3]*M[i][3]+((coeff[4])? coeff[4]: 0)+((coeff[5])? coeff[5]*(Math.random()-0.5): 0.0);
-    return postCreate(func, null, M);
+    return postCreate(ntests, func, null, M);
 }
 
-asyncTest("appendCol, function with rowprop, compare with postLM",
-	  postLMlength+1,
-	  postLM([100,200,300,-400], function(csvname, csvdata){ 
+QUnit.test("appendCol, function with rowprop, compare with postLM",
+	   postLM([100,200,300,-400], postLMlength+1, function(assert,done,csvname, csvdata){ 
+	      'use strict';
 	      CSV.begin(csvname).
 		  appendCol("y", 
 			    function(i,r){ 
@@ -505,91 +555,96 @@ asyncTest("appendCol, function with rowprop, compare with postLM",
 			    true).
 		  go(function(e,D){
 		      var i,l;
-		      ok(!e, "errors: "+e);
+		      assert.ok(!e, "errors: "+e);
 		      for(i=1,l=D.rows.length;i<l;++i) 
-			  equal(D.rows[i][4],D.rows[i][5],"z===y row"+i);
-		      start();
+			  assert.equal(D.rows[i][4],D.rows[i][5],"z===y row"+i);
+		      done();
 		  }
 		    );
-	  }));
+	   }));
 
 
 
-asyncTest("ols, no intercept", 10, postLM([100,200,300,-400], function(csvname, csvdata){
+QUnit.test("ols, no intercept", postLM([100,200,300,-400], 10, function(assert,done,csvname, csvdata){
+    'use strict';
     CSV.begin(csvname).
 	ols([["fit1","z",["a","b","c","d"]]]).
 	go(function(e,D){
-	    ok(!e, "errors: "+e);
-	    ok(!!D.fit, "D.fit exists");
-	    ok(!!D.fit.fit1, "D.fit.fit1 exists");
-	    equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
-	    deepEqual(D.fit.fit1.indep, ['a','b','c','d'], "D.fit.fit1.indep correct");
-	    ok(!!D.fit.fit1.beta, "beta exists ["+D.fit.fit1.beta.join(',')+"]");
-	    ok(Math.abs(D.fit.fit1.beta[0]-100)<1, "beta[0] between 99,101");
-	    ok(Math.abs(D.fit.fit1.beta[1]-200)<2, "beta[1] between 198,202");
-	    ok(Math.abs(D.fit.fit1.beta[2]-300)<3, "beta[2] between 297,303");
-	    ok(Math.abs(D.fit.fit1.beta[3]+400)<4, "beta[3] between -404,-396");
-	    start();
+	    assert.ok(!e, "errors: "+e);
+	    assert.ok(D.fit, "D.fit exists");
+	    assert.ok(D.fit.fit1, "D.fit.fit1 exists");
+	    assert.equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
+	    assert.deepEqual(D.fit.fit1.indep, ['a','b','c','d'], "D.fit.fit1.indep correct");
+	    assert.ok(D.fit.fit1.beta, "beta exists ["+D.fit.fit1.beta.join(',')+"]");
+	    assert.ok(Math.abs(D.fit.fit1.beta[0]-100)<1, "beta[0] between 99,101");
+	    assert.ok(Math.abs(D.fit.fit1.beta[1]-200)<2, "beta[1] between 198,202");
+	    assert.ok(Math.abs(D.fit.fit1.beta[2]-300)<3, "beta[2] between 297,303");
+	    assert.ok(Math.abs(D.fit.fit1.beta[3]+400)<4, "beta[3] between -404,-396");
+	    done();
 	});
 }));
 
-asyncTest("ols, estimate intercept, check zero",  11, postLM([100,200,300,-400], function(csvname, csvdata){
+QUnit.test("ols, estimate intercept, check zero",  postLM([100,200,300,-400], 11, function(assert,done,csvname, csvdata){
+    'use strict';
     CSV.begin(csvname).
 	ols([["fit1","z",["a","b","c","d", 1]]]).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    ok(!!D.fit, "D.fit exists");
-	    ok(!!D.fit.fit1, "D.fit.fit1 exists");
-	    equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
-	    deepEqual(D.fit.fit1.indep, ['a','b','c','d', 1], "D.fit.fit1.indep correct");
-	    ok(!!D.fit.fit1.beta, "beta exists ["+D.fit.fit1.beta.join(',')+"]");
-	    ok(Math.abs(D.fit.fit1.beta[0]-100)<1, "beta[0] between 99,101");
-	    ok(Math.abs(D.fit.fit1.beta[1]-200)<2, "beta[1] between 198,202");
-	    ok(Math.abs(D.fit.fit1.beta[2]-300)<3, "beta[2] between 297,303");
-	    ok(Math.abs(D.fit.fit1.beta[3]+400)<4, "beta[3] between -404,-396");
-	    ok(Math.abs(D.fit.fit1.beta[4])<1.0, "beta[4] (intercept) between -1,1");
-	    start();
+	    assert.ok(!e, "errors: "+e); 
+	    assert.ok(D.fit, "D.fit exists");
+	    assert.ok(D.fit.fit1, "D.fit.fit1 exists");
+	    assert.equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
+	    assert.deepEqual(D.fit.fit1.indep, ['a','b','c','d', 1], "D.fit.fit1.indep correct");
+	    assert.ok(D.fit.fit1.beta, "beta exists ["+D.fit.fit1.beta.join(',')+"]");
+	    assert.ok(Math.abs(D.fit.fit1.beta[0]-100)<1, "beta[0] between 99,101");
+	    assert.ok(Math.abs(D.fit.fit1.beta[1]-200)<2, "beta[1] between 198,202");
+	    assert.ok(Math.abs(D.fit.fit1.beta[2]-300)<3, "beta[2] between 297,303");
+	    assert.ok(Math.abs(D.fit.fit1.beta[3]+400)<4, "beta[3] between -404,-396");
+	    assert.ok(Math.abs(D.fit.fit1.beta[4])<1.0, "beta[4] (intercept) between -1,1");
+	    done();
 	}
 	  );
 }));
 
-asyncTest("ols, estimate intercept, check -2.5",  11, postLM([100,200,300,-400,-2.5], function(csvname, csvdata){
+QUnit.test("ols, estimate intercept, check -2.5", postLM([100,200,300,-400,-2.5], 11, function(assert,done,csvname, csvdata){
+    'use strict';
     CSV.begin(csvname).
 	ols([["fit1","z",["a","b","c","d", 1]]]).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    ok(!!D.fit, "D.fit exists");
-	    ok(!!D.fit.fit1, "D.fit.fit1 exists");
-	    equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
-	    deepEqual(D.fit.fit1.indep, ['a','b','c','d', 1], "D.fit.fit1.indep correct");
-	    ok(!!D.fit.fit1.beta, "beta exists ["+D.fit.fit1.beta.join(',')+"]");
-	    ok(Math.abs(D.fit.fit1.beta[0]-100)<1, "beta[0] between 99,101");
-	    ok(Math.abs(D.fit.fit1.beta[1]-200)<2, "beta[1] between 198,202");
-	    ok(Math.abs(D.fit.fit1.beta[2]-300)<3, "beta[2] between 297,303");
-	    ok(Math.abs(D.fit.fit1.beta[3]+400)<4, "beta[3] between -404,-396");
-	    ok(Math.abs(D.fit.fit1.beta[4]+2.5)<0.01, "beta[4] (intercept) between -2.51,-2.49");
-	    start();
+	    assert.ok(!e, "errors: "+e); 
+	    assert.ok(D.fit, "D.fit exists");
+	    assert.ok(D.fit.fit1, "D.fit.fit1 exists");
+	    assert.equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
+	    assert.deepEqual(D.fit.fit1.indep, ['a','b','c','d', 1], "D.fit.fit1.indep correct");
+	    assert.ok(D.fit.fit1.beta, "beta exists ["+D.fit.fit1.beta.join(',')+"]");
+	    assert.ok(Math.abs(D.fit.fit1.beta[0]-100)<1, "beta[0] between 99,101");
+	    assert.ok(Math.abs(D.fit.fit1.beta[1]-200)<2, "beta[1] between 198,202");
+	    assert.ok(Math.abs(D.fit.fit1.beta[2]-300)<3, "beta[2] between 297,303");
+	    assert.ok(Math.abs(D.fit.fit1.beta[3]+400)<4, "beta[3] between -404,-396");
+	    assert.ok(Math.abs(D.fit.fit1.beta[4]+2.5)<0.01, "beta[4] (intercept) between -2.51,-2.49");
+	    done();
 	}
 	  );
 }));
 
-asyncTest("numerically invalid ols, identical columns",  7, postLM([100,200,300,-400,-2.5], function(csvname, csvdata){
+QUnit.test("numerically invalid ols, identical columns", postLM([100,200,300,-400,-2.5], 7, function(assert,done,csvname, csvdata){
+    'use strict';
     CSV.begin(csvname).
 	ols([["fit1","z",["a","b","c","d", 1, 1]]]).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    ok(!!D.fit, "D.fit exists");
-	    ok(!!D.fit.fit1, "D.fit.fit1 exists");
-	    equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
-	    deepEqual(D.fit.fit1.indep, ['a','b','c','d', 1, 1], "D.fit.fit1.indep correct");
-	    ok(!D.fit.fit1.beta, "beta absent");
-	    ok(D.fit.fit1.error, "error string present, e:"+D.fit.fit1.error);
-	    start();
+	    assert.ok(!e, "errors: "+e); 
+	    assert.ok(D.fit, "D.fit exists");
+	    assert.ok(D.fit.fit1, "D.fit.fit1 exists");
+	    assert.equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
+	    assert.deepEqual(D.fit.fit1.indep, ['a','b','c','d', 1, 1], "D.fit.fit1.indep correct");
+	    assert.ok(!D.fit.fit1.beta, "beta absent");
+	    assert.ok(D.fit.fit1.error, "error string present, e:"+D.fit.fit1.error);
+	    done();
 	}
 	  );
 }));
 
-asyncTest("multiple ols",  38, postLM([100,200,300,-400,-2.5], function(csvname, csvdata){
+QUnit.test("multiple ols",  postLM([100,200,300,-400,-2.5], 38, function(assert,done,csvname, csvdata){
+    'use strict';
     // need to calculate what some reasonable (99%) tolerances should be
     // on some of these tests
     CSV.begin(csvname).
@@ -603,34 +658,34 @@ asyncTest("multiple ols",  38, postLM([100,200,300,-400,-2.5], function(csvname,
 	    ["fit7","z",["a","b","c",1]]
 	]).
 	go(function(e,D){
-	    ok(!e, "errors: "+e); 
-	    ok(!!D.fit, "D.fit exists");
-	    ok(!!D.fit.fit1, "D.fit.fit1 exists");
-	    ok(!!D.fit.fit2, "D.fit.fit2 exists");
-	    ok(!!D.fit.fit3, "D.fit.fit3 exists");
-	    ok(!!D.fit.fit4, "D.fit.fit4 exists");
-	    ok(!!D.fit.fit5, "D.fit.fit5 exists");
-	    ok(!!D.fit.fit6, "D.fit.fit6 exists");
-	    ok(!!D.fit.fit7, "D.fit.fit7 exists");
-	    equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
-	    equal(D.fit.fit2.dep, 'z', "D.fit.fit2.dep set to z");
-	    equal(D.fit.fit3.dep, 'z', "D.fit.fit3.dep set to z");
-	    equal(D.fit.fit4.dep, 'z', "D.fit.fit4.dep set to z");
-	    equal(D.fit.fit5.dep, 'z', "D.fit.fit5.dep set to z");
-	    equal(D.fit.fit6.dep, 'z', "D.fit.fit6.dep set to z");
-	    equal(D.fit.fit7.dep, 'z', "D.fit.fit7.dep set to z");
-	    deepEqual(D.fit.fit1.indep, ['a','b','c','d', 1, 1], "D.fit.fit1.indep correct");
-	    deepEqual(D.fit.fit2.indep, ['a', 1], "D.fit.fit2.indep correct");
-	    deepEqual(D.fit.fit3.indep, ['b', 1], "D.fit.fit3.indep correct");
-	    deepEqual(D.fit.fit4.indep, ['c', 1], "D.fit.fit4.indep correct");
-	    deepEqual(D.fit.fit5.indep, ['d', 1], "D.fit.fit5.indep correct");
-	    deepEqual(D.fit.fit6.indep, ['a','b', 1], "D.fit.fit6.indep correct");
-	    deepEqual(D.fit.fit7.indep, ['a','b','c', 1], "D.fit.fit7.indep correct");
-	    ok(!D.fit.fit1.beta, "fit1.beta absent");
-	    ok(D.fit.fit1.error, "fit1 error string present, e:"+D.fit.fit1.error);
+	    assert.ok(!e, "errors: "+e); 
+	    assert.ok(D.fit, "D.fit exists");
+	    assert.ok(D.fit.fit1, "D.fit.fit1 exists");
+	    assert.ok(D.fit.fit2, "D.fit.fit2 exists");
+	    assert.ok(D.fit.fit3, "D.fit.fit3 exists");
+	    assert.ok(D.fit.fit4, "D.fit.fit4 exists");
+	    assert.ok(D.fit.fit5, "D.fit.fit5 exists");
+	    assert.ok(D.fit.fit6, "D.fit.fit6 exists");
+	    assert.ok(D.fit.fit7, "D.fit.fit7 exists");
+	    assert.equal(D.fit.fit1.dep, 'z', "D.fit.fit1.dep set to z");
+	    assert.equal(D.fit.fit2.dep, 'z', "D.fit.fit2.dep set to z");
+	    assert.equal(D.fit.fit3.dep, 'z', "D.fit.fit3.dep set to z");
+	    assert.equal(D.fit.fit4.dep, 'z', "D.fit.fit4.dep set to z");
+	    assert.equal(D.fit.fit5.dep, 'z', "D.fit.fit5.dep set to z");
+	    assert.equal(D.fit.fit6.dep, 'z', "D.fit.fit6.dep set to z");
+	    assert.equal(D.fit.fit7.dep, 'z', "D.fit.fit7.dep set to z");
+	    assert.deepEqual(D.fit.fit1.indep, ['a','b','c','d', 1, 1], "D.fit.fit1.indep correct");
+	    assert.deepEqual(D.fit.fit2.indep, ['a', 1], "D.fit.fit2.indep correct");
+	    assert.deepEqual(D.fit.fit3.indep, ['b', 1], "D.fit.fit3.indep correct");
+	    assert.deepEqual(D.fit.fit4.indep, ['c', 1], "D.fit.fit4.indep correct");
+	    assert.deepEqual(D.fit.fit5.indep, ['d', 1], "D.fit.fit5.indep correct");
+	    assert.deepEqual(D.fit.fit6.indep, ['a','b', 1], "D.fit.fit6.indep correct");
+	    assert.deepEqual(D.fit.fit7.indep, ['a','b','c', 1], "D.fit.fit7.indep correct");
+	    assert.ok(!D.fit.fit1.beta, "fit1.beta absent");
+	    assert.ok(D.fit.fit1.error, "fit1 error string present, e:"+D.fit.fit1.error);
 	    function okfit(n,m,v,tol){
 		var x = D.fit['fit'+n].beta[m];
-		ok(Math.abs(x-v)<tol, 
+		assert.ok(Math.abs(x-v)<tol, 
 		   "fit"+n+".beta["+m+"] "+x+" equals "+v+" +/- "+tol
 		  );
 	    }
@@ -647,7 +702,7 @@ asyncTest("multiple ols",  38, postLM([100,200,300,-400,-2.5], function(csvname,
 	    okfit(7,0,100,20);
 	    okfit(7,1,200,40);
 	    okfit(7,2,300,60);
-	    start();
+	    done();
 	}
 	  );
 }));
