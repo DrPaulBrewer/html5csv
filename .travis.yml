@@ -4,6 +4,7 @@ node_js:
 before_script:
   - npm i karma -D
   - npm i karma-cli -D
+  - npm i karma-qunit -D
   - npm i karma-firefox-launcher -D
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
