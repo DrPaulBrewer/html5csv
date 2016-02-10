@@ -1,6 +1,8 @@
 html5csv
 ========
 
+[![Build Status](https://travis-ci.org/DrPaulBrewer/html5csv.svg?branch=master)](https://travis-ci.org/DrPaulBrewer/html5csv)
+
 ####License: GPLv3
 
 **Quickly create apps that generate, "upload", "download", slice, analyze, plot, edit and store CSV tabular data...**
