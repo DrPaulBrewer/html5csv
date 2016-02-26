@@ -1,4 +1,4 @@
-// html5csv.js (C) Copyright 2013- Dr Paul Brewer Economic and Financial Technology COnsulting LLC
+// html5csv.js (C) Copyright 2013- Dr Paul Brewer Economic and Financial Technology Consulting LLC
 // This Javscript library is Free software and comes with ABSOLUTELY NO WARRANTY
 //
 // The author hereby provides permission to use this free software either:
