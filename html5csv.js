@@ -14,7 +14,7 @@
 // https://opensource.org/licenses/MIT
 //
 // If you are using html5csv.js for commercial purposes, and want additional support.
-// knowhow, or a modificaction of the license terms, please contact <drpaulbrewer@eaftc.com>
+// knowhow, or a modification of these license terms, please contact <drpaulbrewer@eaftc.com>
 //
 // You may also contact Paul via his LinkedIn profile: https://linkedin.com/in/drpaulbrewer
 //
