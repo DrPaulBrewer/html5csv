@@ -1,26 +1,22 @@
-// html5csv.js (C) Copyright 2013 Dr Paul Brewer
+// html5csv.js (C) Copyright 2013- Dr Paul Brewer Economic and Financial Technology COnsulting LLC
 // This Javscript library is Free software and comes with ABSOLUTELY NO WARRANTY
 //
-// The author hereby provides permission to use this free software under the terms 
-// of the GNU General Public License which may be found at 
+// The author hereby provides permission to use this free software either:
+//
+// (1) under the terms and conditions 
+// of the GNU General Public License a copy of which may be found at 
 // http://www.gnu.org/licenses/gpl-3.0.txt
 //
-// Some organizations prefer not to be bound by the terms of the GNU General Public License.
+// OR
 //
-// Commercial licenses from the author are available, and may provide for uses not permitted
-// under the GNU General Public License. The author may be contacted on Linked In 
-// via http://www.linkedin.com/in/drpaulbrewer
+// (2) under the terms and conditions
+// of the MIT License a copy of which may be found at 
+// https://opensource.org/licenses/MIT
 //
-// Uses requiring a commercial license include serving or distributing an object code version 
-// of this software, without also supplying the fully readable, editable source code, 
-// (where object code includes any minified, compiled, compressed or obfuscated 
-// Javascript code that uses shortened names or space removal and is therefore no longer in 
-// the preferred form for editing by software developers), combining the software here in the
-// same Javascript file with other proprietary software that is not provided as 
-// free software under terms similar to the GNU General Public License, embedding the 
-// software into a hardware device so that it can not be viewed or edited by the end user, 
-// or modifying or removing these notices and/or copyright notices in ways contrary 
-// to the free license.  This may not be the entire list of uses requiring a commercial license.
+// If you are using html5csv.js for commercial purposes, and want additional support.
+// knowhow, or a modificaction of the license terms, please contact <drpaulbrewer@eaftc.com>
+//
+// You may also contact Paul via his LinkedIn profile: https://linkedin.com/in/drpaulbrewer
 //
 //
 

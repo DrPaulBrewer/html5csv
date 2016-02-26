@@ -3,7 +3,7 @@ html5csv
 
 [![Build Status](https://travis-ci.org/DrPaulBrewer/html5csv.svg?branch=master)](https://travis-ci.org/DrPaulBrewer/html5csv)
 
-####License: GPLv3
+####License: html5csv.js is dual-licensed and may be used under your choice of GPLv3 free software license or MIT open source license. 
 
 **Quickly create apps that generate, "upload", "download", slice, analyze, plot, edit and store CSV tabular data...**
 

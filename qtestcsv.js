@@ -1,6 +1,6 @@
 // qunit tests for html5csv.js
 // (C) Copyright 2013 Dr Paul Brewer
-// License:  GNU GPL v3
+// License:  Dual Licensed choice of GPLv3 or MIT
 // see file html5csv.js for additional license details
 
 /* jshint strict:true, undef:true, browser:true, qunit:true, jquery:true, lastsemic:true  */
