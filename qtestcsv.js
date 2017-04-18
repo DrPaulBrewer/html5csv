@@ -276,7 +276,7 @@ QUnit.test("local CSV to HTML table display and retrieve", postCreate(3, functio
 	    CSV.begin('#tab1').go(
 		function(ee,DD){
 		    assert.ok(!ee,"errors: "+ee);
-		    equal(JSON.stringify(D.rows), JSON.stringify(DD.rows), "data matches");
+		    assert.deepEqual(D.rows, DD.rows, "data matches");
 		}
 	    );
 	}
