@@ -2,6 +2,7 @@ language: node_js
 node_js:
   - "stable"
 before_script:
+  - npm i qunitjs -D
   - npm i karma -D
   - npm i karma-cli -D
   - npm i karma-qunit -D
