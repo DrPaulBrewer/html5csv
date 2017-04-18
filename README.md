@@ -3,7 +3,7 @@ html5csv
 
 [![Build Status](https://travis-ci.org/DrPaulBrewer/html5csv.svg?branch=master)](https://travis-ci.org/DrPaulBrewer/html5csv)
 
-####License: html5csv.js is dual-licensed and may be used under your choice of GPLv3 free software license or MIT open source license. 
+#### License: html5csv.js is dual-licensed and may be used under your choice of GPLv3 free software license or MIT open source license. 
 
 **Quickly create apps that generate, "upload", "download", slice, analyze, plot, edit and store CSV tabular data...**
 
@@ -16,7 +16,7 @@ Optional:  LZString (for compression), numeric.js (for analysis), qunit (for uni
 The optional libraries are authored by others and distributed under the MIT-License.  Verbatim copies recent as of
 August 2013 are included in the external-free subdirectory.  
 
-##Example 1: "Hello World"  
+## Example 1: "Hello World"  
 
 <a href="http://jsfiddle.net/DrPaulBrewer/zHN7g/">JSFiddle for Example 1: Hello World in html5csv</a>
 
@@ -151,7 +151,7 @@ Input capabilities include:
 * reading from URLs via ajax (same origin restriction applies unless the server sends a CORS header or supports JSONP)
 
 
-####To "Upload" to the CSV app a file of CSV data 
+#### To "Upload" to the CSV app a file of CSV data 
 ```html
 <input type='file' id='choose' />
 ```
@@ -163,14 +163,14 @@ Note:  this code does not immediately read the file chosen in `#choose`, it atta
      CSV.begin('#choose').....go();
 ```
 
-####Scraping an existing HTML table
+#### Scraping an existing HTML table
 
 Works the same way, but there is no HTML input element.  
 
 The name in CSV.begin(name) can be a [valid jQuery selector](http://api.jquery.com/category/selectors/) like \#divId, and if there are 
 table rows as descendents it will gather the data.
 
-####Examples with Basic Math
+#### Examples with Basic Math
 
 *    A 5x10 matrix of uniform [0,1] Random Variables
   `CSV.begin('%U', {dim: [5,10]}).do-stuff...go();`
