@@ -18,8 +18,6 @@ August 2013 are included in the external-free subdirectory.
 
 ## Example 1: "Hello World"  
 
-### Warning: The JSfiddle is temporarily broken, because a link needs to be updated.
-
 <a href="http://jsfiddle.net/DrPaulBrewer/zHN7g/">JSFiddle for Example 1: Hello World in html5csv</a>
 
 In every introductory language class there is usually a "Hello World" program
@@ -88,9 +86,6 @@ and involves a brief delay in setTimeout before going to the next step.
 ----------------
 
 ## Example 2: Serverless browser-based "download" of HelloWorld.csv
-
-### Warning: The JSfiddle is temporarily broken, because a link needs to be updated.
-
 
 <a href="http://jsfiddle.net/DrPaulBrewer/dzPZP/">JSFiddle Example 2 Downloading HelloWorld.csv</a>
 
