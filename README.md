@@ -1,6 +1,5 @@
 html5csv
 ========
-
 [![Build Status](https://travis-ci.org/DrPaulBrewer/html5csv.svg?branch=master)](https://travis-ci.org/DrPaulBrewer/html5csv)
 
 #### License: html5csv.js is dual-licensed and may be used under your choice of GPLv3 free software license or MIT open source license. 
@@ -9,9 +8,41 @@ html5csv
 
 ... **all without a server** .  Or with a server, too.  Extendable.
 
-Dependencies:  jQuery
+## Warning: Unmaintained code
 
-Optional:  LZString (for compression), numeric.js (for analysis), qunit (for unit testing)
+This 6 year old code library is largely unmaintained.  
+
+I am somewhat surprised by the popularity of this library.  I initially developed it as a learning experience and for 
+data analysis in Javascript apps.  I have since moved to Plotly for charting.  For data analysis I think most people
+would prefer to code in a Jupyter notebook instead of in Javascript directly.
+
+Some of the stranger applications I have heard of include building management (elevators in a skyscaper) and a gambling parlor
+in south east asia.  
+
+## Help wanted 
+
+The following **unpaid volunteer** roles are available:
+
+* co-maintainers
+* contributors
+
+Some prior Javascript experience required.  Data science background a plus.
+
+Tell me what you would like to improve or work on.  
+
+Email: drpaulbrewer@eaftc.com
+
+## Dependencies
+
+### Required
+
+* jQuery
+
+### Optional 
+
+* LZString (for compression) 
+* numeric.js (for analysis)
+* qunit (for unit testing)
 
 The optional libraries are authored by others and distributed under the MIT-License.  Verbatim copies recent as of
 August 2013 are included in the external-free subdirectory.  
