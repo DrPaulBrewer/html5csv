@@ -28,7 +28,16 @@ The following **unpaid volunteer** roles are available:
 
 Some prior Javascript experience required.  Data science background a plus.
 
-Tell me what you would like to improve or work on.  
+Tell me what you would like to improve or work on.  One overriding goal was to keep
+the library very simple.  For example, an undergraduate with a bit of website experience
+should be able to use this library and Jquery to make a demonstration website out of research data.
+
+Here are some obvious needs:
+
+* standardize documentation and improve readability
+* portfolio of examples (this library can do multiple regression and principal components analysis)
+* pluggable additions
+* additional "made simple" machine learning techniques
 
 Email: drpaulbrewer@eaftc.com
 
