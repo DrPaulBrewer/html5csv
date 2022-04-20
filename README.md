@@ -13,12 +13,13 @@ html5csv
 This 6 year old code library is largely unmaintained.  
 
 I am somewhat surprised by the popularity of this library.  I initially developed it as a learning experience and for 
-data analysis in Javascript apps.  I have since moved to Plotly for charting.  For data analysis I think most people
-would prefer to code in a Jupyter notebook instead of in Javascript directly.
+data analysis in Javascript apps.  I have since moved to Plotly for charting.  For data analysis working in python and
+Jupyter is more mainstream than coding at a lower, more detailed level in Javascript. 
 
-From time to time I'll get some email about it. One company used it for building management.  They combined it with some 
-other software to be able to see charts and then get the .csv data files. Another company
-used the random table generator to run their computerized kiosk games in a small casino in Asia.  
+From time to time I'll get some email about current applications. One company used this code to help manage commercial buildings.
+They combined it with some other software to be able to see charts and then get the .csv data files. Another company
+had used the random table generator to run their computerized kiosk games in a small casino in Asia. Feel free to let me know
+if you have come up with a unique or unexpected application.
 
 ## Help wanted 
 
