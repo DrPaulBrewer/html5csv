@@ -16,8 +16,9 @@ I am somewhat surprised by the popularity of this library.  I initially develope
 data analysis in Javascript apps.  I have since moved to Plotly for charting.  For data analysis I think most people
 would prefer to code in a Jupyter notebook instead of in Javascript directly.
 
-Some of the stranger applications I have heard of include building management (elevators in a skyscaper) and a gambling parlor
-in south east asia.  
+From time to time I'll get some email about it. One company used it for building management.  They combined it with some 
+other software to be able to see charts and then get the .csv data files. Another company
+used the random table generator to run their computerized kiosk games in a small casino in Asia.  
 
 ## Help wanted 
 
