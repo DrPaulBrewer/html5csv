@@ -17,8 +17,8 @@ data analysis in Javascript apps.  I have since moved to Plotly for charting.  F
 Jupyter is more mainstream than coding at a lower, more detailed level in Javascript. 
 
 From time to time I'll get some email about current applications. One company used this code to help manage commercial buildings.
-They combined it with some other software to be able to see charts and then get the .csv data files. Another company
-had used the random table generator to run their computerized kiosk games in a small casino in Asia. Feel free to let me know
+This code enabled them to see charts and then get the .csv data files from another web-based system. Another company
+had used the random table generator herein to run their computerized kiosk games in a small casino in Asia. Feel free to let me know
 if you have come up with a unique or unexpected application.
 
 ## Help wanted 
